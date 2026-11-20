@@ -16,7 +16,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       <Sidebar name={s.name} role={s.role} badges={{ inbox: b?.inbox ?? 0, handoffs: b?.handoffs ?? 0 }} />
       <div className="flex min-w-0 flex-1 flex-col">
         <TopNav name={s.name} role={s.role} inboxCount={b?.inbox ?? 0} handoffsCount={b?.handoffs ?? 0} />
-        <main className="min-w-0 flex-1 p-5 md:p-6 lg:p-8 max-w-[1560px] w-full mx-auto">{children}</main>
+        <main className="min-w-0 flex-1 p-4 md:p-5 lg:p-6 max-w-[1560px] w-full mx-auto">{children}</main>
       </div>
     </div>
   );

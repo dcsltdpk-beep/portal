@@ -69,7 +69,7 @@ export default async function Dashboard() {
       from crm.emails e
       left join crm.leads l on l.id = e.lead_id
       where (e.status = 'auto_replied' or e.sent_by like 'ai:%')
-      order by e.created_at desc limit 4
+      order by e.created_at desc limit 6
     `),
   ]);
 
@@ -77,12 +77,11 @@ export default async function Dashboard() {
   const qualRate = k?.qualified_rate != null ? Math.min(100, Math.max(0, k.qualified_rate)) : 0;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Top Hero KPI Row */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
         {/* Card 1: Featured Brand Gradient Hero Card */}
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-navy via-navy-900 to-navy-950 p-5 text-white shadow-md">
-          {/* Subtle gold decorative gradient circle */}
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-navy via-navy-900 to-navy-950 p-4 text-white shadow-xs">
           <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-gold/15 blur-2xl" />
 
           <div className="flex items-center justify-between">
@@ -90,13 +89,12 @@ export default async function Dashboard() {
             <span className="rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-semibold text-slate-200">7 Days</span>
           </div>
 
-          <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-4xl font-extrabold tracking-tight">{k?.new_7d ?? 0}</span>
+          <div className="mt-2 flex items-baseline gap-2">
+            <span className="text-3xl font-extrabold tracking-tight">{k?.new_7d ?? 0}</span>
             <span className="text-xs font-medium text-slate-300">Total Leads</span>
           </div>
 
-          {/* Sub metrics pill row */}
-          <div className="mt-4 flex items-center justify-between gap-1 border-t border-white/10 pt-3 text-[11px]">
+          <div className="mt-2.5 flex items-center justify-between gap-1 border-t border-white/10 pt-2 text-[11px]">
             <div>
               <p className="text-slate-400">Calls</p>
               <p className="font-bold text-white">{k?.calls_7d ?? 0}</p>
@@ -115,7 +113,7 @@ export default async function Dashboard() {
         </div>
 
         {/* Card 2: Hot Leads Action Card */}
-        <div className="card p-5 relative overflow-hidden flex flex-col justify-between hover:border-gold/40 transition">
+        <div className="card p-4 relative overflow-hidden flex flex-col justify-between hover:border-gold/40 transition">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Action Today</span>
             <span className="rounded-full bg-red-50 text-red-700 border border-red-200/80 px-2 py-0.5 text-[10px] font-bold">
@@ -123,28 +121,28 @@ export default async function Dashboard() {
             </span>
           </div>
 
-          <div className="mt-2">
+          <div className="mt-1.5">
             <div className="flex items-baseline gap-2">
               <span className="text-3xl font-extrabold tracking-tight text-navy-950">{k?.hot_open ?? 0}</span>
               <span className="text-xs font-semibold text-amber-700">Hot Leads Open</span>
             </div>
-            <p className="text-[11px] text-slate-500 mt-1">High conversion score, ready for direct call</p>
+            <p className="text-[11px] text-slate-500 mt-0.5">High conversion score, ready for call</p>
           </div>
 
-          <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-600">Open Handoffs:</span>
-            <span className="font-bold text-xs text-red-600">{k?.open_handoffs ?? 0}</span>
+          <div className="mt-2 pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
+            <span className="text-slate-600">Open Handoffs:</span>
+            <span className="font-bold text-red-600">{k?.open_handoffs ?? 0}</span>
           </div>
         </div>
 
         {/* Card 3: Conversion & Qualification */}
-        <div className="card p-5 flex flex-col justify-between">
+        <div className="card p-4 flex flex-col justify-between">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Qualified Rate</span>
             <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-600">Services</span>
           </div>
 
-          <div className="mt-2 flex items-center justify-between">
+          <div className="mt-1.5 flex items-center justify-between">
             <div>
               <span className="text-3xl font-extrabold tracking-tight text-navy-950">
                 {k?.qualified_rate != null ? `${k.qualified_rate}%` : "—"}
@@ -152,20 +150,19 @@ export default async function Dashboard() {
               <p className="text-[11px] text-slate-500 mt-0.5">Leads to Qualified (30d)</p>
             </div>
 
-            {/* Circular Progress Meter Preview */}
-            <div className="relative flex h-13 w-13 items-center justify-center rounded-full bg-navy-50 border-3 border-navy text-xs font-extrabold text-navy shadow-inner">
+            <div className="relative flex h-11 w-11 items-center justify-center rounded-full bg-navy-50 border-3 border-navy text-[11px] font-extrabold text-navy shadow-inner">
               {qualRate}%
             </div>
           </div>
 
-          <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+          <div className="mt-2 pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
             <span className="text-slate-500">Academy Inquiries:</span>
             <span className="font-bold text-navy-950">{k?.academy_inquiries_30d ?? 0}</span>
           </div>
         </div>
 
         {/* Card 4: AI Auto-Pilot & First Touch Speed */}
-        <div className="card p-5 flex flex-col justify-between">
+        <div className="card p-4 flex flex-col justify-between">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-500">AI Auto-Pilot</span>
             <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/80 px-2.5 py-0.5 text-[10px] font-bold">
@@ -174,7 +171,7 @@ export default async function Dashboard() {
             </span>
           </div>
 
-          <div className="mt-2">
+          <div className="mt-1.5">
             <div className="flex items-baseline gap-2">
               <span className="text-3xl font-extrabold tracking-tight text-navy-950">
                 {k?.emails_auto_replied_7d ?? 0}
@@ -186,7 +183,7 @@ export default async function Dashboard() {
             </p>
           </div>
 
-          <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+          <div className="mt-2 pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
             <Link href="/inbox?f=auto" className="font-bold text-navy hover:text-gold-dark hover:underline flex items-center gap-1">
               <span>View AI Replies &rarr;</span>
             </Link>
@@ -197,18 +194,82 @@ export default async function Dashboard() {
         </div>
       </div>
 
-      {/* Main Operational View: 2 Balanced Columns */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 items-start">
-        {/* Left Column (8 cols ~ 67%): Interactive Hot Leads & Follow-ups Table */}
-        <div className="lg:col-span-8 space-y-4">
+      {/* Main Operational Section: Balanced 2-Column Grid (Zero Unnecessary Page Scroll) */}
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-12 items-start">
+        {/* Left Column (7 cols): Hot Leads Table + Side-by-side Channels & Pipelines */}
+        <div className="lg:col-span-7 space-y-4">
+          {/* Hot Leads / Follow-ups Tabs */}
           <DashboardLeadTabs hotLeads={hot} followUps={followUps} />
+
+          {/* Side-by-side Row: Channels + Pipelines */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {/* Leads by Channel Card */}
+            <div className="card p-4 shadow-xs">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-2.5 mb-2.5">
+                <h2 className="text-xs font-bold uppercase tracking-wider text-navy-950">Leads by Channel (7d)</h2>
+                <span className="text-[11px] font-semibold text-slate-400">Total: {k?.new_7d ?? 0}</span>
+              </div>
+
+              <div className="space-y-2.5">
+                {bySource.map((r) => {
+                  const pct = Math.round((r.leads / Math.max(1, k?.new_7d ?? 1)) * 100);
+                  return (
+                    <div key={r.source} className="group">
+                      <div className="flex justify-between text-xs font-medium">
+                        <span className="capitalize text-slate-700 font-semibold">{r.source}</span>
+                        <span className="text-slate-500">
+                          <strong className="text-navy-950">{r.leads}</strong> ({pct}%)
+                        </span>
+                      </div>
+                      <div className="mt-1 h-1.5 w-full rounded-full bg-slate-100 overflow-hidden">
+                        <div
+                          className="h-1.5 rounded-full bg-gradient-to-r from-navy to-navy-surface transition-all duration-500 group-hover:from-gold group-hover:to-gold-dark"
+                          style={{ width: `${Math.min(100, Math.max(6, (r.leads / maxSrc) * 100))}%` }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+                {bySource.length === 0 && <p className="text-xs text-slate-400 py-2 text-center">No leads recorded yet.</p>}
+              </div>
+            </div>
+
+            {/* Quick Pipelines Overview Card */}
+            <div className="card p-4 shadow-xs">
+              <h2 className="text-xs font-bold uppercase tracking-wider text-navy-950 border-b border-slate-100 pb-2.5 mb-2.5">
+                Pipelines Overview
+              </h2>
+              <div className="space-y-2">
+                <Link
+                  href="/pipelines/services"
+                  className="flex items-center justify-between rounded-xl bg-slate-50 p-2.5 transition hover:bg-navy-50 hover:border-navy-border/30 border border-slate-200/60 group"
+                >
+                  <div>
+                    <p className="text-xs font-bold text-navy-950 group-hover:text-navy">Services Pipeline</p>
+                    <p className="text-[10px] text-slate-500">Won this month: {k?.won_30d ?? 0}</p>
+                  </div>
+                  <span className="text-xs font-bold text-navy group-hover:translate-x-0.5 transition-transform">&rarr;</span>
+                </Link>
+
+                <Link
+                  href="/pipelines/academy"
+                  className="flex items-center justify-between rounded-xl bg-slate-50 p-2.5 transition hover:bg-navy-50 hover:border-navy-border/30 border border-slate-200/60 group"
+                >
+                  <div>
+                    <p className="text-xs font-bold text-navy-950 group-hover:text-navy">Academy Pipeline</p>
+                    <p className="text-[10px] text-slate-500">Enrolled this month: {k?.enrolled_30d ?? 0}</p>
+                  </div>
+                  <span className="text-xs font-bold text-navy group-hover:translate-x-0.5 transition-transform">&rarr;</span>
+                </Link>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Right Column (4 cols ~ 33%): Channel Breakdown, Recent Auto-Replies & Pipelines */}
-        <div className="lg:col-span-4 space-y-5">
-          {/* Live Recent AI Auto-Replies Widget */}
-          <div className="card p-5 shadow-xs">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
+        {/* Right Column (5 cols): Live Recent AI Auto-Replies Widget */}
+        <div className="lg:col-span-5">
+          <div className="card p-4 shadow-xs flex flex-col">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-2.5 mb-2.5">
               <div className="flex items-center gap-2">
                 <span className="relative flex h-2 w-2">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
@@ -221,103 +282,43 @@ export default async function Dashboard() {
               </Link>
             </div>
 
-            <div className="space-y-2.5">
+            {/* Scrollable list inside the card if there are many replies */}
+            <div className="space-y-2 max-h-[380px] overflow-y-auto pr-1">
               {recentAutoReplies.map((r) => {
                 const agentLabel = r.sent_by ? r.sent_by.replace(/^ai:/, "").replace(/_/g, " ") : "AI Agent";
                 return (
                   <Link
                     key={r.id}
                     href={`/inbox?f=auto&open=${r.id}`}
-                    className="block rounded-xl bg-slate-50/80 p-3 transition hover:bg-emerald-50/60 hover:border-emerald-200 border border-slate-200/60"
+                    className="block rounded-xl bg-slate-50/80 p-2.5 transition hover:bg-emerald-50/60 hover:border-emerald-200 border border-slate-200/60"
                   >
                     <div className="flex items-center justify-between text-xs">
-                      <span className="font-semibold text-navy-950 truncate max-w-[170px]">
+                      <span className="font-semibold text-navy-950 truncate max-w-[210px]">
                         {r.lead_name || r.to_addr || r.from_addr}
                       </span>
                       <span className="text-[10px] text-slate-400 shrink-0">{ago(r.created_at)}</span>
                     </div>
-                    <p className="truncate text-[11px] text-slate-600 font-medium mt-1">
+                    <p className="truncate text-[11px] text-slate-600 font-medium mt-0.5">
                       {r.subject || "(No subject)"}
                     </p>
-                    <div className="mt-2 flex items-center justify-between">
+                    <div className="mt-1.5 flex items-center justify-between">
                       <span className="inline-flex items-center gap-1 rounded bg-emerald-100/80 px-1.5 py-0.5 text-[10px] font-bold text-emerald-800 uppercase tracking-wide">
                         ✓ {agentLabel}
                       </span>
-                      <span className="text-[10px] font-medium text-slate-400">Sent via Gmail</span>
+                      <span className="text-[10px] font-medium text-slate-400">Delivered via Gmail</span>
                     </div>
                   </Link>
                 );
               })}
 
               {recentAutoReplies.length === 0 && (
-                <div className="py-5 text-center">
+                <div className="py-8 text-center">
                   <p className="text-xs text-slate-500 font-medium">No auto-replies logged yet.</p>
                   <p className="text-[10px] text-slate-400 mt-1">
                     Incoming emails will be auto-replied by n8n agents and show here live.
                   </p>
                 </div>
               )}
-            </div>
-          </div>
-
-          {/* Leads by Channel Card */}
-          <div className="card p-5 shadow-xs">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
-              <h2 className="text-xs font-bold uppercase tracking-wider text-navy-950">Leads by Channel (7d)</h2>
-              <span className="text-[11px] font-semibold text-slate-400">Total: {k?.new_7d ?? 0}</span>
-            </div>
-
-            <div className="space-y-3.5">
-              {bySource.map((r) => {
-                const pct = Math.round((r.leads / Math.max(1, k?.new_7d ?? 1)) * 100);
-                return (
-                  <div key={r.source} className="group">
-                    <div className="flex justify-between text-xs font-medium">
-                      <span className="capitalize text-slate-700 font-semibold">{r.source}</span>
-                      <span className="text-slate-500">
-                        <strong className="text-navy-950">{r.leads}</strong> ({pct}%)
-                      </span>
-                    </div>
-                    <div className="mt-1.5 h-2 w-full rounded-full bg-slate-100 overflow-hidden">
-                      <div
-                        className="h-2 rounded-full bg-gradient-to-r from-navy to-navy-surface transition-all duration-500 group-hover:from-gold group-hover:to-gold-dark"
-                        style={{ width: `${Math.min(100, Math.max(6, (r.leads / maxSrc) * 100))}%` }}
-                      />
-                    </div>
-                  </div>
-                );
-              })}
-              {bySource.length === 0 && <p className="text-xs text-slate-400 py-3 text-center">No leads recorded yet.</p>}
-            </div>
-          </div>
-
-          {/* Quick Pipelines Overview Card */}
-          <div className="card p-5 shadow-xs">
-            <h2 className="text-xs font-bold uppercase tracking-wider text-navy-950 border-b border-slate-100 pb-3 mb-3">
-              Pipelines Overview
-            </h2>
-            <div className="space-y-2.5">
-              <Link
-                href="/pipelines/services"
-                className="flex items-center justify-between rounded-xl bg-slate-50 p-3 transition hover:bg-navy-50 hover:border-navy-border/30 border border-slate-200/60 group"
-              >
-                <div>
-                  <p className="text-xs font-bold text-navy-950 group-hover:text-navy">Services Pipeline (B2B)</p>
-                  <p className="text-[11px] text-slate-500">Won this month: {k?.won_30d ?? 0}</p>
-                </div>
-                <span className="text-xs font-bold text-navy group-hover:translate-x-0.5 transition-transform">&rarr;</span>
-              </Link>
-
-              <Link
-                href="/pipelines/academy"
-                className="flex items-center justify-between rounded-xl bg-slate-50 p-3 transition hover:bg-navy-50 hover:border-navy-border/30 border border-slate-200/60 group"
-              >
-                <div>
-                  <p className="text-xs font-bold text-navy-950 group-hover:text-navy">Academy Pipeline (B2C)</p>
-                  <p className="text-[11px] text-slate-500">Enrolled this month: {k?.enrolled_30d ?? 0}</p>
-                </div>
-                <span className="text-xs font-bold text-navy group-hover:translate-x-0.5 transition-transform">&rarr;</span>
-              </Link>
             </div>
           </div>
         </div>
