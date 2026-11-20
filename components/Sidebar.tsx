@@ -93,7 +93,7 @@ const NAV: NavItem[] = [
   },
 ];
 
-const ITEM_HEIGHT = 54; // vertical distance between nav item centers in px
+const ITEM_HEIGHT = 52; // slot height in px
 
 export default function Sidebar({
   name,
@@ -120,22 +120,21 @@ export default function Sidebar({
   const currentIndex = optimisticIndex !== null ? optimisticIndex : effectiveIndex;
 
   return (
-    <aside className="sticky top-0 h-screen w-[84px] shrink-0 flex flex-col justify-between bg-[#121028] text-slate-300 border-r border-[#201C46] z-40 select-none no-scrollbar shadow-[4px_0_30px_rgba(0,0,0,0.25)]">
+    <aside className="sticky top-0 h-screen w-[76px] shrink-0 flex flex-col justify-between bg-[#121028] text-slate-300 border-r border-[#201C46] z-40 select-none shadow-[4px_0_30px_rgba(0,0,0,0.25)]">
       {/* Top Header Logo */}
-      <div className="pt-5 pb-3 flex justify-center items-center">
+      <div className="pt-4 pb-2 flex justify-center items-center">
         <Link
           href="/dashboard"
           onClick={() => setOptimisticIndex(0)}
           className="relative group flex items-center justify-center"
         >
-          {/* Logo container with ambient glow */}
-          <div className="relative flex h-11 w-11 items-center justify-center rounded-2xl bg-white/5 p-1.5 transition-all duration-300 group-hover:scale-105 group-hover:bg-white/10 group-hover:shadow-[0_0_20px_rgba(251,174,68,0.35)] border border-white/10">
+          <div className="relative flex h-10 w-10 items-center justify-center rounded-2xl bg-white/6 p-1.5 transition-all duration-300 group-hover:scale-105 group-hover:bg-white/10 group-hover:shadow-[0_0_20px_rgba(251,174,68,0.35)] border border-white/10">
             <Image
               src="/logo.png"
               alt="Dream Cyber Security Logo"
-              width={34}
-              height={34}
-              className="h-8 w-8 object-contain drop-shadow"
+              width={32}
+              height={32}
+              className="h-7 w-7 object-contain drop-shadow"
               priority
               unoptimized
             />
@@ -144,31 +143,40 @@ export default function Sidebar({
       </div>
 
       {/* Navigation Links with Fluid Sliding Capsule Pill */}
-      <div className="relative flex-1 flex flex-col justify-center py-2">
+      <div className="relative flex-1 flex flex-col justify-center">
         <nav className="relative flex flex-col items-center">
-          {/* THE SLIDING CAPSULE PILL (Exactly matches user's reference image!) */}
+          {/* THE SLIDING CAPSULE PILL:
+              - Left starts inside the sidebar
+              - Extends 12px over the right border line into the main content
+              - White dot is pinned cleanly inside the right rounded cap
+              - Icon is perfectly centered along the x=38px vertical axis
+          */}
           <div
-            className="absolute left-1.5 pointer-events-none transition-all duration-400 ease-[cubic-bezier(0.34,1.56,0.64,1)] z-10"
+            className="absolute left-[7px] pointer-events-none transition-all duration-380 ease-[cubic-bezier(0.34,1.56,0.64,1)] z-10"
             style={{
               transform: `translateY(${currentIndex * ITEM_HEIGHT}px)`,
-              height: "46px",
-              width: "75px",
+              height: "44px",
+              width: "78px",
             }}
           >
-            <div className="relative h-full w-full rounded-full bg-[#757470]/50 backdrop-blur-xl border border-white/20 shadow-[0_6px_22px_rgba(0,0,0,0.45)] flex items-center justify-end pr-2.5">
+            <div className="relative h-full w-full rounded-full bg-[#6E6C68]/45 backdrop-blur-xl border border-white/20 shadow-[0_4px_20px_rgba(0,0,0,0.4)] flex items-center justify-end pr-2.5">
               {/* Solid White Glowing Dot on the right edge */}
-              <span className="h-2.5 w-2.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.95)] animate-pulse" />
+              <span className="h-2.5 w-2.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,1)]" />
             </div>
           </div>
 
-          {/* Navigation Items */}
-          <div className="relative z-20 flex flex-col">
+          {/* Navigation Items (All centered at x = 38px) */}
+          <div className="relative z-20 flex flex-col items-center">
             {NAV.map((n, idx) => {
               const active = currentIndex === idx;
               const count = n.badgeKey ? badges[n.badgeKey] : 0;
 
               return (
-                <div key={n.href} className="relative group flex items-center justify-center" style={{ height: `${ITEM_HEIGHT}px` }}>
+                <div
+                  key={n.href}
+                  className="relative group flex items-center justify-center w-full"
+                  style={{ height: `${ITEM_HEIGHT}px` }}
+                >
                   <Link
                     href={n.href}
                     onClick={() => {
@@ -176,7 +184,7 @@ export default function Sidebar({
                         setOptimisticIndex(idx);
                       });
                     }}
-                    className={`relative flex h-11 w-11 items-center justify-center rounded-full transition-all duration-300 ${
+                    className={`relative flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300 ${
                       active ? "text-white" : "text-slate-400 hover:text-white"
                     }`}
                   >
@@ -191,7 +199,7 @@ export default function Sidebar({
                   </Link>
 
                   {/* Floating Glass Tooltip on Hover (slides out to the right) */}
-                  <div className="pointer-events-none absolute left-[88px] top-1/2 -translate-y-1/2 hidden md:group-hover:flex items-center z-50 rounded-xl bg-[#1A163D]/95 border border-gold/40 px-3 py-1.5 text-xs font-bold text-white shadow-2xl backdrop-blur-md whitespace-nowrap opacity-0 group-hover:opacity-100 group-hover:translate-x-0 translate-x-2 transition-all duration-200">
+                  <div className="pointer-events-none absolute left-[80px] top-1/2 -translate-y-1/2 hidden md:group-hover:flex items-center z-50 rounded-xl bg-[#1A163D]/95 border border-gold/40 px-3 py-1.5 text-xs font-bold text-white shadow-2xl backdrop-blur-md whitespace-nowrap opacity-0 group-hover:opacity-100 group-hover:translate-x-0 translate-x-2 transition-all duration-200">
                     <span>{n.label}</span>
                     {count > 0 && (
                       <span className="ml-2 rounded-full bg-gold px-1.5 py-0.2 text-[10px] font-extrabold text-navy-950">
@@ -206,22 +214,21 @@ export default function Sidebar({
         </nav>
       </div>
 
-      {/* Bottom Area: Avatar + Logout */}
-      <div className="pb-5 pt-2 flex flex-col items-center gap-3">
-
-        {/* User Profile Avatar with Red Unread Badge */}
+      {/* Bottom Profile & Actions */}
+      <div className="pb-4 pt-1 flex flex-col items-center gap-2.5">
+        {/* User Profile Avatar with Red Notification Badge */}
         <div className="relative group cursor-pointer" title={`${name} (${role})`}>
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-tr from-[#2D2969] to-[#1D194B] border-2 border-white/20 text-xs font-black text-white shadow-lg transition-transform duration-300 group-hover:scale-105">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-tr from-[#28245F] to-[#3E3887] border border-white/20 text-xs font-black text-white shadow-md transition-transform duration-300 group-hover:scale-105">
             {name.charAt(0).toUpperCase()}
           </div>
-          {/* Red unread badge (6 in reference) */}
+          {/* Red unread badge */}
           <span className="absolute -top-1 -right-1 flex h-4 min-w-4 px-1 items-center justify-center rounded-full bg-rose-500 border-2 border-[#121028] text-[9px] font-black text-white shadow-md">
-            {badges.inbox > 0 ? badges.inbox : 6}
+            {badges.inbox > 0 ? badges.inbox : 1}
           </span>
         </div>
 
-        {/* Bottom Actions Row: Logout & Options */}
-        <div className="flex items-center gap-1.5 pt-1">
+        {/* Bottom Actions Row: Logout & Settings */}
+        <div className="flex items-center gap-1">
           <form action="/logout" method="post">
             <button
               type="submit"
@@ -236,7 +243,7 @@ export default function Sidebar({
 
           <Link
             href="/settings"
-            title="Preferences"
+            title="Settings"
             className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 hover:text-gold hover:bg-white/10 transition-colors"
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
