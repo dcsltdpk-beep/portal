@@ -132,9 +132,24 @@ export default async function LeadPage({ params, searchParams }: { params: Promi
                   e.direction === "out" ? "ml-10 bg-navy-50/40 border-navy-border/20" : "mr-10"
                 }`}
               >
-                <div className="flex flex-wrap justify-between gap-2 text-xs text-slate-500">
-                  <span>{e.direction === "in" ? `From ${e.from_addr}` : `To ${e.to_addr} · ${e.sent_by ?? ""}`}</span>
-                  <span>{fmtDate(e.created_at)} · {e.status}</span>
+                <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500">
+                  <span className="font-medium">{e.direction === "in" ? `From ${e.from_addr}` : `To ${e.to_addr}${e.sent_by ? ` · ${e.sent_by}` : ""}`}</span>
+                  <div className="flex items-center gap-2">
+                    <span>{fmtDate(e.created_at)}</span>
+                    {e.status === "auto_replied" ? (
+                      <span className="rounded-full bg-emerald-50 border border-emerald-200/80 px-2 py-0.5 font-bold text-emerald-700 text-[10px]">
+                        ✓ AI Auto-Replied
+                      </span>
+                    ) : e.status === "needs_human" ? (
+                      <span className="rounded-full bg-amber-50 border border-gold/40 px-2 py-0.5 font-semibold text-amber-800 text-[10px]">
+                        Needs Human
+                      </span>
+                    ) : (
+                      <span className="rounded-full bg-slate-100 px-2 py-0.5 font-medium text-slate-600 text-[10px]">
+                        {e.status}
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <p className="mt-1 font-semibold text-navy-950">{e.subject}</p>
                 <pre className="mt-2 whitespace-pre-wrap font-sans text-sm text-slate-700">{e.body_text}</pre>
