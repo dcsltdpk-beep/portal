@@ -5,10 +5,13 @@ import SettingsForm from "@/components/SettingsForm";
 
 export default async function SettingsPage() {
   const s = await requireSession();
-  const settings = await q<{ key: string; value: string }>("select key, value from crm.settings");
-  const rules = await q<{ signal: string; points: number; description: string | null }>("select * from crm.scoring_rules order by points desc");
-  const users = await q<{ name: string; role: string; email: string; last_login_at: string | null }>(
-    "select name, role, email, last_login_at from crm.users where active order by role, name");
+  const [settings, rules, users] = await Promise.all([
+    q<{ key: string; value: string }>("select key, value from crm.settings"),
+    q<{ signal: string; points: number; description: string | null }>("select * from crm.scoring_rules order by points desc"),
+    q<{ name: string; role: string; email: string; last_login_at: string | null }>(
+      "select name, role, email, last_login_at from crm.users where active order by role, name"
+    ),
+  ]);
   const get = (k: string) => settings.find((x) => x.key === k)?.value ?? "";
   return (
     <>
