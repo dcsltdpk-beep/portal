@@ -1,8 +1,7 @@
 import Link from "next/link";
 import { requireSession, leadScope } from "@/lib/auth";
 import { q, q1 } from "@/lib/db";
-import { ScoreBadge, StageBadge, PageTitle } from "@/components/Badges";
-import { ago, leadName } from "@/lib/format";
+import DashboardLeadTabs from "@/components/DashboardLeadTabs";
 import type { Lead } from "@/lib/types";
 
 type Kpis = {
@@ -37,119 +36,207 @@ export default async function Dashboard() {
       where created_at > now() - interval '7 days' group by 1 order by 2 desc`);
 
   const hot = await q<Lead>(
-    `select l.* from crm.leads l where ${scope.sql}
+    `select l.*, u.name as owner_name from crm.leads l left join crm.users u on u.id = l.owner_id
+      where ${scope.sql}
        and l.score >= (select value::int from crm.settings where key='hot_score')
        and coalesce(l.stage,'') not in ('won','lost','enrolled')
-     order by l.score desc, l.last_inbound_at desc nulls last limit 10`, scope.params);
+     order by l.score desc, l.last_inbound_at desc nulls last limit 15`, scope.params);
 
   const followUps = await q<Lead>(
-    `select l.* from crm.leads l where ${scope.sql} and l.next_follow_up <= now() + interval '1 day'
+    `select l.*, u.name as owner_name from crm.leads l left join crm.users u on u.id = l.owner_id
+      where ${scope.sql} and l.next_follow_up <= now() + interval '1 day'
        and coalesce(l.stage,'') not in ('won','lost','enrolled')
-     order by l.next_follow_up limit 10`, scope.params);
+     order by l.next_follow_up limit 15`, scope.params);
 
-  const tiles: [string, string | number, string][] = [
-    ["New leads (7d)", k?.new_7d ?? 0, "All channels"],
-    ["Speed to first reply", k?.median_reply_min != null ? `${k.median_reply_min} min` : "—", "Median, 30d. Aim under 5"],
-    ["Lead → qualified", k?.qualified_rate != null ? `${k.qualified_rate}%` : "—", "Services, 30d"],
-    ["Calls booked (7d)", k?.calls_7d ?? 0, "Discovery + counselling"],
-    ["Proposals sent / won", `${k?.proposals_30d ?? 0} / ${k?.won_30d ?? 0}`, "Last 30 days"],
-    ["Inquiries → enrolled", `${k?.academy_inquiries_30d ?? 0} / ${k?.enrolled_30d ?? 0}`, "Academy, 30d"],
-    ["Hot leads open", k?.hot_open ?? 0, "Call them today"],
-    ["Open handoffs", k?.open_handoffs ?? 0, "Waiting for a human"],
-    ["Emails waiting", k?.emails_waiting ?? 0, "New or needs a human"],
-  ];
   const maxSrc = Math.max(1, ...bySource.map((r) => r.leads));
+  const qualRate = k?.qualified_rate != null ? Math.min(100, Math.max(0, k.qualified_rate)) : 0;
 
   return (
-    <>
-      <PageTitle title={`Hello, ${s.name.split(" ")[0]}`} sub="Live DCS CRM performance & metrics overview" />
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-        {tiles.map(([t, v, h], i) => (
-          <div
-            key={t}
-            className={`card p-5 transition hover:border-navy-border/40 hover:shadow-sm ${
-              i === 6 ? "border-amber-300/80 bg-amber-50/40" : ""
-            }`}
-          >
-            <p className="text-xs font-semibold tracking-wide text-slate-500 uppercase">{t}</p>
-            <p className="mt-1 text-3xl font-extrabold tracking-tight text-navy-950">{v}</p>
-            <p className="mt-1 text-xs text-slate-400">{h}</p>
+    <div className="space-y-6">
+      {/* Top Hero KPI Row (Inspired by modern SaaS Analytics Layout) */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {/* Card 1: Featured Brand Gradient Hero Card */}
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-navy via-navy-900 to-navy-950 p-5 text-white shadow-md">
+          {/* Subtle gold decorative gradient circle */}
+          <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-gold/15 blur-2xl" />
+
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-gold">Inbound Volume</span>
+            <span className="rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-semibold text-slate-200">7 Days</span>
           </div>
-        ))}
+
+          <div className="mt-3 flex items-baseline gap-2">
+            <span className="text-4xl font-extrabold tracking-tight">{k?.new_7d ?? 0}</span>
+            <span className="text-xs font-medium text-slate-300">Total Leads</span>
+          </div>
+
+          {/* Sub metrics pill row */}
+          <div className="mt-4 flex items-center justify-between gap-1 border-t border-white/10 pt-3 text-[11px]">
+            <div>
+              <p className="text-slate-400">Calls</p>
+              <p className="font-bold text-white">{k?.calls_7d ?? 0}</p>
+            </div>
+            <div className="h-4 w-px bg-white/10" />
+            <div>
+              <p className="text-slate-400">Proposals</p>
+              <p className="font-bold text-white">{k?.proposals_30d ?? 0}</p>
+            </div>
+            <div className="h-4 w-px bg-white/10" />
+            <div>
+              <p className="text-slate-400">Deals Won</p>
+              <p className="font-bold text-gold">{k?.won_30d ?? 0}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Card 2: Hot Leads Action Card */}
+        <div className="card p-5 relative overflow-hidden flex flex-col justify-between hover:border-gold/40 transition">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Action Today</span>
+            <span className="rounded-full bg-red-50 text-red-700 border border-red-200/80 px-2 py-0.5 text-[10px] font-bold">
+              Priority
+            </span>
+          </div>
+
+          <div className="mt-2">
+            <div className="flex items-baseline gap-2">
+              <span className="text-3xl font-extrabold tracking-tight text-navy-950">{k?.hot_open ?? 0}</span>
+              <span className="text-xs font-semibold text-amber-700">Hot Leads Open</span>
+            </div>
+            <p className="text-[11px] text-slate-500 mt-1">High conversion score, ready for direct call</p>
+          </div>
+
+          <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between">
+            <span className="text-xs font-medium text-slate-600">Open Handoffs:</span>
+            <span className="font-bold text-xs text-red-600">{k?.open_handoffs ?? 0}</span>
+          </div>
+        </div>
+
+        {/* Card 3: Conversion & Qualification */}
+        <div className="card p-5 flex flex-col justify-between">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Qualified Rate</span>
+            <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-600">Services</span>
+          </div>
+
+          <div className="mt-2 flex items-center justify-between">
+            <div>
+              <span className="text-3xl font-extrabold tracking-tight text-navy-950">
+                {k?.qualified_rate != null ? `${k.qualified_rate}%` : "—"}
+              </span>
+              <p className="text-[11px] text-slate-500 mt-0.5">Leads to Qualified (30d)</p>
+            </div>
+
+            {/* Circular Progress Meter Preview */}
+            <div className="relative flex h-13 w-13 items-center justify-center rounded-full bg-navy-50 border-3 border-navy text-xs font-extrabold text-navy shadow-inner">
+              {qualRate}%
+            </div>
+          </div>
+
+          <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+            <span className="text-slate-500">Academy Inquiries:</span>
+            <span className="font-bold text-navy-950">{k?.academy_inquiries_30d ?? 0}</span>
+          </div>
+        </div>
+
+        {/* Card 4: Speed to First Reply & Inbox */}
+        <div className="card p-5 flex flex-col justify-between">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Response Speed</span>
+            <span className="rounded-full bg-emerald-50 text-emerald-700 px-2 py-0.5 text-[10px] font-bold">Target &lt; 5m</span>
+          </div>
+
+          <div className="mt-2">
+            <div className="flex items-baseline gap-2">
+              <span className="text-3xl font-extrabold tracking-tight text-navy-950">
+                {k?.median_reply_min != null ? `${k.median_reply_min} min` : "—"}
+              </span>
+              <span className="text-xs font-medium text-slate-500">Median</span>
+            </div>
+            <p className="text-[11px] text-slate-500 mt-0.5">Automated AI + Team First Touch</p>
+          </div>
+
+          <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+            <Link href="/inbox" className="font-medium text-navy hover:text-gold-dark hover:underline flex items-center gap-1">
+              <span>Emails Waiting:</span>
+              <span className="font-bold text-amber-700">({k?.emails_waiting ?? 0})</span>
+            </Link>
+            <span className="text-[10px] text-slate-400">Needs reply</span>
+          </div>
+        </div>
       </div>
 
-      <div className="mt-6 grid gap-6 xl:grid-cols-3">
-        <section className="card p-5 xl:col-span-2">
-          <div className="mb-3 flex items-center justify-between">
-            <h2 className="font-bold text-navy-950">Hot leads: call today</h2>
-            <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-800">Priority</span>
-          </div>
-          <LeadMiniTable leads={hot} empty="No hot leads right now." />
-        </section>
+      {/* Main Operational View: 2 Balanced Columns (Zero Excessive Vertical Scroll) */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 items-start">
+        {/* Left Column (8 cols ~ 67%): Interactive Hot Leads & Follow-ups Table */}
+        <div className="lg:col-span-8 space-y-4">
+          <DashboardLeadTabs hotLeads={hot} followUps={followUps} />
+        </div>
 
-        <section className="card p-5">
-          <h2 className="mb-3 font-bold text-navy-950">Leads by channel (7d)</h2>
-          <div className="space-y-3">
-            {bySource.map((r) => (
-              <div key={r.source}>
-                <div className="flex justify-between text-xs font-medium text-slate-600">
-                  <span className="capitalize">{r.source}</span>
-                  <span className="font-bold text-navy-950">{r.leads}</span>
-                </div>
-                <div className="mt-1.5 h-2 rounded-full bg-slate-100 overflow-hidden">
-                  <div
-                    className="h-2 rounded-full bg-navy transition-all duration-500"
-                    style={{ width: `${(r.leads / maxSrc) * 100}%` }}
-                  />
-                </div>
-              </div>
-            ))}
-            {bySource.length === 0 && <p className="text-sm text-slate-400">No leads in the last 7 days.</p>}
+        {/* Right Column (4 cols ~ 33%): Channel Breakdown & Quick Pipeline Nav */}
+        <div className="lg:col-span-4 space-y-5">
+          {/* Leads by Channel Card */}
+          <div className="card p-5 shadow-xs">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
+              <h2 className="text-xs font-bold uppercase tracking-wider text-navy-950">Leads by Channel (7d)</h2>
+              <span className="text-[11px] font-semibold text-slate-400">Total: {k?.new_7d ?? 0}</span>
+            </div>
+
+            <div className="space-y-3.5">
+              {bySource.map((r) => {
+                const pct = Math.round((r.leads / Math.max(1, k?.new_7d ?? 1)) * 100);
+                return (
+                  <div key={r.source} className="group">
+                    <div className="flex justify-between text-xs font-medium">
+                      <span className="capitalize text-slate-700 font-semibold">{r.source}</span>
+                      <span className="text-slate-500">
+                        <strong className="text-navy-950">{r.leads}</strong> ({pct}%)
+                      </span>
+                    </div>
+                    <div className="mt-1.5 h-2 w-full rounded-full bg-slate-100 overflow-hidden">
+                      <div
+                        className="h-2 rounded-full bg-gradient-to-r from-navy to-navy-surface transition-all duration-500 group-hover:from-gold group-hover:to-gold-dark"
+                        style={{ width: `${Math.min(100, Math.max(6, (r.leads / maxSrc) * 100))}%` }}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+              {bySource.length === 0 && <p className="text-xs text-slate-400 py-3 text-center">No leads recorded yet.</p>}
+            </div>
           </div>
-        </section>
+
+          {/* Quick Pipelines Overview Card */}
+          <div className="card p-5 shadow-xs">
+            <h2 className="text-xs font-bold uppercase tracking-wider text-navy-950 border-b border-slate-100 pb-3 mb-3">
+              Pipelines Overview
+            </h2>
+            <div className="space-y-2.5">
+              <Link
+                href="/pipelines/services"
+                className="flex items-center justify-between rounded-xl bg-slate-50 p-3 transition hover:bg-navy-50 hover:border-navy-border/30 border border-slate-200/60 group"
+              >
+                <div>
+                  <p className="text-xs font-bold text-navy-950 group-hover:text-navy">Services Pipeline (B2B)</p>
+                  <p className="text-[11px] text-slate-500">Won this month: {k?.won_30d ?? 0}</p>
+                </div>
+                <span className="text-xs font-bold text-navy group-hover:translate-x-0.5 transition-transform">&rarr;</span>
+              </Link>
+
+              <Link
+                href="/pipelines/academy"
+                className="flex items-center justify-between rounded-xl bg-slate-50 p-3 transition hover:bg-navy-50 hover:border-navy-border/30 border border-slate-200/60 group"
+              >
+                <div>
+                  <p className="text-xs font-bold text-navy-950 group-hover:text-navy">Academy Pipeline (B2C)</p>
+                  <p className="text-[11px] text-slate-500">Enrolled this month: {k?.enrolled_30d ?? 0}</p>
+                </div>
+                <span className="text-xs font-bold text-navy group-hover:translate-x-0.5 transition-transform">&rarr;</span>
+              </Link>
+            </div>
+          </div>
+        </div>
       </div>
-
-      <section className="card mt-6 p-5">
-        <h2 className="mb-3 font-bold text-navy-950">Follow-ups due (next 24 hours)</h2>
-        <LeadMiniTable leads={followUps} empty="No follow-ups due soon." showFollowUp />
-      </section>
-    </>
-  );
-}
-
-function LeadMiniTable({ leads, empty, showFollowUp }: { leads: Lead[]; empty: string; showFollowUp?: boolean }) {
-  if (leads.length === 0) return <p className="text-sm text-slate-400">{empty}</p>;
-  return (
-    <div className="overflow-x-auto">
-      <table className="w-full">
-        <thead>
-          <tr className="border-b border-slate-200">
-            <th className="th">Lead</th>
-            <th className="th">Stage</th>
-            <th className="th">Score</th>
-            <th className="th">Owner</th>
-            <th className="th">{showFollowUp ? "Due" : "Last message"}</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-slate-100">
-          {leads.map((l) => (
-            <tr key={l.id} className="hover:bg-slate-50/80 transition">
-              <td className="td">
-                <Link href={`/leads/${l.id}`} className="font-semibold text-navy hover:text-gold-dark hover:underline">
-                  {leadName(l)}
-                </Link>
-                <p className="text-xs text-slate-400">{l.service_interest || l.company || "—"}</p>
-              </td>
-              <td className="td"><StageBadge stage={l.stage} /></td>
-              <td className="td"><ScoreBadge score={l.score} /></td>
-              <td className="td text-slate-600">{l.owner_name || <span className="text-slate-400">—</span>}</td>
-              <td className="td text-xs text-slate-500">
-                {showFollowUp && l.next_follow_up ? ago(l.next_follow_up) : ago(l.last_inbound_at)}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
     </div>
   );
 }
