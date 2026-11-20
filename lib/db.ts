@@ -7,7 +7,14 @@ const g = globalThis as unknown as { _ro?: Pool; _rw?: Pool };
 
 function make(url: string | undefined) {
   if (!url) throw new Error("Database URL missing. Check .env");
-  return new Pool({ connectionString: url, max: 5, ssl: url.includes("localhost") ? false : { rejectUnauthorized: false } });
+  return new Pool({
+    connectionString: url,
+    max: 10,
+    idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: 8000,
+    ssl: url.includes("localhost") ? false : { rejectUnauthorized: false },
+    keepAlive: true,
+  });
 }
 
 export const ro = () => (g._ro ??= make(process.env.DATABASE_URL_RO));

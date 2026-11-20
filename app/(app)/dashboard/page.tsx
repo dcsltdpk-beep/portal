@@ -14,39 +14,42 @@ export default async function Dashboard() {
   const s = await requireSession();
   const scope = leadScope(s, "l", 1);
 
-  const k = await q1<Kpis>(`
-    with hot as (select value::int v from crm.settings where key = 'hot_score')
-    select
-      (select count(*)::int from crm.leads where created_at > now() - interval '7 days') as new_7d,
-      (select count(*)::int from crm.leads, hot where score >= hot.v and coalesce(stage,'') not in ('won','lost','enrolled')) as hot_open,
-      (select count(*)::int from crm.handoffs where status = 'Open') as open_handoffs,
-      (select count(*)::int from crm.emails where direction = 'in' and status in ('new','needs_human')) as emails_waiting,
-      (select round(median_minutes::numeric, 1)::float from crm.v_speed_to_first_reply) as median_reply_min,
-      (select round(100.0 * count(*) filter (where stage in ('qualified','call_booked','proposal_sent','negotiation','won')) / nullif(count(*),0), 1)::float
-         from crm.leads where pipeline = 'services' and created_at > now() - interval '30 days') as qualified_rate,
-      (select count(*)::int from crm.meetings where created_at > now() - interval '7 days') as calls_7d,
-      (select count(*)::int from crm.activities where type = 'stage_change' and content like '%-> proposal_sent%' and created_at > now() - interval '30 days') as proposals_30d,
-      (select count(*)::int from crm.activities where type = 'stage_change' and content like '%-> won%' and created_at > now() - interval '30 days') as won_30d,
-      (select count(*)::int from crm.leads where pipeline = 'academy' and created_at > now() - interval '30 days') as academy_inquiries_30d,
-      (select count(*)::int from crm.activities where type = 'stage_change' and content like '%-> enrolled%' and created_at > now() - interval '30 days') as enrolled_30d
-  `);
-
-  const bySource = await q<{ source: string; leads: number }>(
-    `select coalesce(source,'unknown') as source, count(*)::int as leads from crm.leads
-      where created_at > now() - interval '7 days' group by 1 order by 2 desc`);
-
-  const hot = await q<Lead>(
-    `select l.*, u.name as owner_name from crm.leads l left join crm.users u on u.id = l.owner_id
-      where ${scope.sql}
-       and l.score >= (select value::int from crm.settings where key='hot_score')
-       and coalesce(l.stage,'') not in ('won','lost','enrolled')
-     order by l.score desc, l.last_inbound_at desc nulls last limit 15`, scope.params);
-
-  const followUps = await q<Lead>(
-    `select l.*, u.name as owner_name from crm.leads l left join crm.users u on u.id = l.owner_id
-      where ${scope.sql} and l.next_follow_up <= now() + interval '1 day'
-       and coalesce(l.stage,'') not in ('won','lost','enrolled')
-     order by l.next_follow_up limit 15`, scope.params);
+  // Execute all 4 queries concurrently in parallel to eliminate page delay
+  const [k, bySource, hot, followUps] = await Promise.all([
+    q1<Kpis>(`
+      with hot as (select value::int v from crm.settings where key = 'hot_score')
+      select
+        (select count(*)::int from crm.leads where created_at > now() - interval '7 days') as new_7d,
+        (select count(*)::int from crm.leads, hot where score >= hot.v and coalesce(stage,'') not in ('won','lost','enrolled')) as hot_open,
+        (select count(*)::int from crm.handoffs where status = 'Open') as open_handoffs,
+        (select count(*)::int from crm.emails where direction = 'in' and status in ('new','needs_human')) as emails_waiting,
+        (select round(median_minutes::numeric, 1)::float from crm.v_speed_to_first_reply) as median_reply_min,
+        (select round(100.0 * count(*) filter (where stage in ('qualified','call_booked','proposal_sent','negotiation','won')) / nullif(count(*),0), 1)::float
+           from crm.leads where pipeline = 'services' and created_at > now() - interval '30 days') as qualified_rate,
+        (select count(*)::int from crm.meetings where created_at > now() - interval '7 days') as calls_7d,
+        (select count(*)::int from crm.activities where type = 'stage_change' and content like '%-> proposal_sent%' and created_at > now() - interval '30 days') as proposals_30d,
+        (select count(*)::int from crm.activities where type = 'stage_change' and content like '%-> won%' and created_at > now() - interval '30 days') as won_30d,
+        (select count(*)::int from crm.leads where pipeline = 'academy' and created_at > now() - interval '30 days') as academy_inquiries_30d,
+        (select count(*)::int from crm.activities where type = 'stage_change' and content like '%-> enrolled%' and created_at > now() - interval '30 days') as enrolled_30d
+    `),
+    q<{ source: string; leads: number }>(`
+      select coalesce(source,'unknown') as source, count(*)::int as leads from crm.leads
+        where created_at > now() - interval '7 days' group by 1 order by 2 desc
+    `),
+    q<Lead>(`
+      select l.*, u.name as owner_name from crm.leads l left join crm.users u on u.id = l.owner_id
+        where ${scope.sql}
+         and l.score >= (select value::int from crm.settings where key='hot_score')
+         and coalesce(l.stage,'') not in ('won','lost','enrolled')
+       order by l.score desc, l.last_inbound_at desc nulls last limit 15
+    `, scope.params),
+    q<Lead>(`
+      select l.*, u.name as owner_name from crm.leads l left join crm.users u on u.id = l.owner_id
+        where ${scope.sql} and l.next_follow_up <= now() + interval '1 day'
+         and coalesce(l.stage,'') not in ('won','lost','enrolled')
+       order by l.next_follow_up limit 15
+    `, scope.params),
+  ]);
 
   const maxSrc = Math.max(1, ...bySource.map((r) => r.leads));
   const qualRate = k?.qualified_rate != null ? Math.min(100, Math.max(0, k.qualified_rate)) : 0;

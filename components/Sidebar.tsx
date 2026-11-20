@@ -1,8 +1,8 @@
 "use client";
-import { useState, useTransition } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 interface NavItem {
   href: string;
@@ -105,7 +105,7 @@ export default function Sidebar({
   badges: Record<string, number>;
 }) {
   const path = usePathname();
-  const [, startTransition] = useTransition();
+  const router = useRouter();
 
   // Find active navigation item index
   const activeIndex = NAV.findIndex((n) => {
@@ -116,7 +116,23 @@ export default function Sidebar({
   const effectiveIndex = activeIndex >= 0 ? activeIndex : 0;
   const [optimisticIndex, setOptimisticIndex] = useState<number | null>(null);
 
-  // If user clicks a tab, immediately slide the pill optimistically
+  // Synchronize optimisticIndex whenever actual path changes
+  useEffect(() => {
+    setOptimisticIndex(null);
+  }, [path]);
+
+  // Eagerly prefetch all main routes on mount for instant zero-wait navigation
+  useEffect(() => {
+    NAV.forEach((item) => {
+      try {
+        router.prefetch(item.href);
+      } catch {
+        // ignore
+      }
+    });
+  }, [router]);
+
+  // Instantaneous active index (0ms UI latency on click)
   const currentIndex = optimisticIndex !== null ? optimisticIndex : effectiveIndex;
 
   return (
@@ -179,10 +195,12 @@ export default function Sidebar({
                 >
                   <Link
                     href={n.href}
+                    prefetch={true}
+                    onMouseEnter={() => {
+                      router.prefetch(n.href);
+                    }}
                     onClick={() => {
-                      startTransition(() => {
-                        setOptimisticIndex(idx);
-                      });
+                      setOptimisticIndex(idx);
                     }}
                     className={`relative flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300 ${
                       active ? "text-white" : "text-slate-400 hover:text-white"
