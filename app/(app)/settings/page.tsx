@@ -19,7 +19,7 @@ export default async function SettingsPage() {
     <div className="space-y-4">
       {/* Page Header */}
       <div>
-        <h1 className="text-xl font-bold text-navy-950">Settings</h1>
+        <h1 className="text-xl font-black text-navy-950 tracking-tight">Settings</h1>
         <p className="text-xs text-slate-500 mt-0.5">
           Configure lead scoring rules and notification preferences.
         </p>
@@ -37,24 +37,32 @@ export default async function SettingsPage() {
           />
         </div>
 
-        {/* Right Column: Team */}
+        {/* Right Column: Colorful Team Card */}
         <div>
-          <div className="card p-4 bg-white space-y-3">
+          <div className="card p-4 border-t-4 border-t-gold border-slate-200/90 bg-gradient-to-b from-navy-50/40 via-white to-white shadow-xs space-y-3">
             <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-              <h2 className="text-xs font-bold text-navy-950">Team</h2>
-              <span className="text-xs text-slate-400">
+              <div className="flex items-center gap-1.5">
+                <span className="text-sm">👥</span>
+                <h2 className="text-xs font-bold uppercase tracking-wider text-navy-950">Team</h2>
+              </div>
+              <span className="rounded-full bg-navy-950 text-gold px-2 py-0.5 text-[10px] font-bold shadow-2xs">
                 {users.length} {users.length === 1 ? "user" : "users"}
               </span>
             </div>
 
             <div className="space-y-2">
               {users.map((u) => (
-                <div key={u.email} className="flex items-center justify-between text-xs">
-                  <div className="truncate">
-                    <p className="font-semibold text-navy-950 truncate">{u.name}</p>
-                    <p className="text-slate-400 truncate text-[11px]">{u.email}</p>
+                <div key={u.email} className="flex items-center justify-between text-xs p-2 rounded-xl bg-white border border-slate-200/80 shadow-2xs">
+                  <div className="flex items-center gap-2 min-w-0 truncate">
+                    <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-navy-950 text-[11px] font-black text-gold ring-2 ring-gold/40 shadow-xs shrink-0">
+                      {u.name.charAt(0).toUpperCase()}
+                    </div>
+                    <div className="truncate">
+                      <p className="font-bold text-navy-950 truncate">{u.name}</p>
+                      <p className="text-slate-400 truncate text-[11px]">{u.email}</p>
+                    </div>
                   </div>
-                  <span className="rounded bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-600 capitalize shrink-0 ml-2">
+                  <span className="rounded-md bg-gold/15 text-navy-950 border border-gold/40 px-2 py-0.5 text-[10px] font-bold capitalize shrink-0 ml-2">
                     {u.role.replace("_", " ")}
                   </span>
                 </div>
