@@ -6,6 +6,179 @@ import { label } from "@/lib/constants";
 import { ago, leadName } from "@/lib/format";
 import type { Lead } from "@/lib/types";
 
+type StageTheme = {
+  topBorder: string;
+  bg: string;
+  borderColor: string;
+  badgeBg: string;
+  badgeText: string;
+  headerDot: string;
+  cardBorder: string;
+  pillBg: string;
+  pillText: string;
+};
+
+const DEFAULT_THEME: StageTheme = {
+  topBorder: "border-t-slate-400",
+  bg: "bg-slate-50/70",
+  borderColor: "border-slate-200/80",
+  badgeBg: "bg-slate-600",
+  badgeText: "text-white",
+  headerDot: "bg-slate-400",
+  cardBorder: "border-l-slate-400",
+  pillBg: "bg-slate-100",
+  pillText: "text-slate-700",
+};
+
+const STAGE_THEMES: Record<string, StageTheme> = {
+  // Services Pipeline Stages
+  new: {
+    topBorder: "border-t-blue-500",
+    bg: "bg-blue-50/25",
+    borderColor: "border-blue-200/90",
+    badgeBg: "bg-blue-600",
+    badgeText: "text-white",
+    headerDot: "bg-blue-500",
+    cardBorder: "border-l-blue-500",
+    pillBg: "bg-blue-50 text-blue-800 border-blue-200",
+    pillText: "text-blue-900",
+  },
+  contacted: {
+    topBorder: "border-t-indigo-500",
+    bg: "bg-indigo-50/25",
+    borderColor: "border-indigo-200/90",
+    badgeBg: "bg-indigo-600",
+    badgeText: "text-white",
+    headerDot: "bg-indigo-500",
+    cardBorder: "border-l-indigo-500",
+    pillBg: "bg-indigo-50 text-indigo-800 border-indigo-200",
+    pillText: "text-indigo-900",
+  },
+  qualified: {
+    topBorder: "border-t-[#FBAE44]",
+    bg: "bg-amber-50/30",
+    borderColor: "border-amber-300/90",
+    badgeBg: "bg-[#FBAE44]",
+    badgeText: "text-navy-950 font-black",
+    headerDot: "bg-[#FBAE44]",
+    cardBorder: "border-l-[#FBAE44]",
+    pillBg: "bg-amber-50 text-amber-900 border-amber-300",
+    pillText: "text-amber-950",
+  },
+  call_booked: {
+    topBorder: "border-t-teal-500",
+    bg: "bg-teal-50/25",
+    borderColor: "border-teal-200/90",
+    badgeBg: "bg-teal-600",
+    badgeText: "text-white",
+    headerDot: "bg-teal-500",
+    cardBorder: "border-l-teal-500",
+    pillBg: "bg-teal-50 text-teal-800 border-teal-200",
+    pillText: "text-teal-900",
+  },
+  proposal_sent: {
+    topBorder: "border-t-orange-500",
+    bg: "bg-orange-50/25",
+    borderColor: "border-orange-200/90",
+    badgeBg: "bg-orange-600",
+    badgeText: "text-white",
+    headerDot: "bg-orange-500",
+    cardBorder: "border-l-orange-500",
+    pillBg: "bg-orange-50 text-orange-800 border-orange-200",
+    pillText: "text-orange-900",
+  },
+  negotiation: {
+    topBorder: "border-t-purple-600",
+    bg: "bg-purple-50/25",
+    borderColor: "border-purple-200/90",
+    badgeBg: "bg-purple-600",
+    badgeText: "text-white",
+    headerDot: "bg-purple-600",
+    cardBorder: "border-l-purple-600",
+    pillBg: "bg-purple-50 text-purple-800 border-purple-200",
+    pillText: "text-purple-900",
+  },
+  won: {
+    topBorder: "border-t-emerald-500",
+    bg: "bg-emerald-50/35",
+    borderColor: "border-emerald-300/90",
+    badgeBg: "bg-emerald-600",
+    badgeText: "text-white",
+    headerDot: "bg-emerald-500",
+    cardBorder: "border-l-emerald-500",
+    pillBg: "bg-emerald-50 text-emerald-800 border-emerald-300",
+    pillText: "text-emerald-950",
+  },
+  lost: {
+    topBorder: "border-t-slate-400",
+    bg: "bg-slate-100/60",
+    borderColor: "border-slate-200/90",
+    badgeBg: "bg-slate-500",
+    badgeText: "text-white",
+    headerDot: "bg-slate-400",
+    cardBorder: "border-l-slate-400",
+    pillBg: "bg-slate-100 text-slate-700 border-slate-200",
+    pillText: "text-slate-800",
+  },
+
+  // Academy Pipeline Stages
+  inquiry: {
+    topBorder: "border-t-blue-500",
+    bg: "bg-blue-50/25",
+    borderColor: "border-blue-200/90",
+    badgeBg: "bg-blue-600",
+    badgeText: "text-white",
+    headerDot: "bg-blue-500",
+    cardBorder: "border-l-blue-500",
+    pillBg: "bg-blue-50 text-blue-800 border-blue-200",
+    pillText: "text-blue-900",
+  },
+  details_sent: {
+    topBorder: "border-t-indigo-500",
+    bg: "bg-indigo-50/25",
+    borderColor: "border-indigo-200/90",
+    badgeBg: "bg-indigo-600",
+    badgeText: "text-white",
+    headerDot: "bg-indigo-500",
+    cardBorder: "border-l-indigo-500",
+    pillBg: "bg-indigo-50 text-indigo-800 border-indigo-200",
+    pillText: "text-indigo-900",
+  },
+  demo_counselling: {
+    topBorder: "border-t-teal-500",
+    bg: "bg-teal-50/25",
+    borderColor: "border-teal-200/90",
+    badgeBg: "bg-teal-600",
+    badgeText: "text-white",
+    headerDot: "bg-teal-500",
+    cardBorder: "border-l-teal-500",
+    pillBg: "bg-teal-50 text-teal-800 border-teal-200",
+    pillText: "text-teal-900",
+  },
+  fee_pending: {
+    topBorder: "border-t-amber-500",
+    bg: "bg-amber-50/30",
+    borderColor: "border-amber-300/90",
+    badgeBg: "bg-amber-500",
+    badgeText: "text-navy-950 font-black",
+    headerDot: "bg-amber-500",
+    cardBorder: "border-l-amber-500",
+    pillBg: "bg-amber-50 text-amber-900 border-amber-300",
+    pillText: "text-amber-950",
+  },
+  enrolled: {
+    topBorder: "border-t-emerald-500",
+    bg: "bg-emerald-50/35",
+    borderColor: "border-emerald-300/90",
+    badgeBg: "bg-emerald-600",
+    badgeText: "text-white",
+    headerDot: "bg-emerald-500",
+    cardBorder: "border-l-emerald-500",
+    pillBg: "bg-emerald-50 text-emerald-800 border-emerald-300",
+    pillText: "text-emerald-950",
+  },
+};
+
 export default function Kanban({ stages, leads }: { stages: readonly string[]; leads: Lead[] }) {
   const [, start] = useTransition();
   const [error, setError] = useState("");
@@ -47,33 +220,33 @@ export default function Kanban({ stages, leads }: { stages: readonly string[]; l
 
   return (
     <div className="space-y-3.5">
-      {error && <p className="text-sm font-semibold text-red-600 bg-red-50 p-2.5 rounded-xl border border-red-200">{error}</p>}
+      {error && (
+        <p className="text-sm font-semibold text-red-600 bg-red-50 p-2.5 rounded-xl border border-red-200">
+          {error}
+        </p>
+      )}
 
       {/* Control Bar: Pipeline Funnel Stats + View Mode Switcher */}
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200/80 pb-3">
-        {/* Stage Funnel Summary Bar */}
+        {/* Stage Funnel Summary Bar with distinct stage colors */}
         <div className="flex flex-wrap items-center gap-1.5 overflow-x-auto text-xs py-0.5">
           {stages.map((st, idx) => {
             const count = items.filter((l) => l.stage === st).length;
-            const isWon = st === "won" || st === "enrolled";
-            const isLost = st === "lost";
+            const theme = STAGE_THEMES[st] ?? DEFAULT_THEME;
             return (
               <div key={st} className="flex items-center gap-1.5">
                 <span
-                  className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 font-semibold transition ${
+                  className={`inline-flex items-center gap-1.5 rounded-xl px-2.5 py-1 font-bold border transition shadow-2xs ${
                     count > 0
-                      ? isWon
-                        ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
-                        : isLost
-                        ? "bg-slate-100 text-slate-600 border border-slate-200"
-                        : "bg-navy-50 text-navy-950 border border-navy-border/30"
-                      : "bg-white text-slate-400 border border-slate-200/60"
+                      ? `${theme.pillBg} shadow-xs`
+                      : "bg-white text-slate-400 border-slate-200/70"
                   }`}
                 >
+                  <span className={`h-2 w-2 rounded-full ${theme.headerDot}`} />
                   <span>{label(st)}</span>
                   <span
-                    className={`rounded-full px-1.5 py-0.2 text-[10px] font-bold ${
-                      count > 0 ? "bg-navy text-white" : "bg-slate-100 text-slate-500"
+                    className={`rounded-full px-1.5 py-0.2 text-[10px] font-black ${
+                      count > 0 ? `${theme.badgeBg} ${theme.badgeText}` : "bg-slate-100 text-slate-500"
                     }`}
                   >
                     {count}
@@ -142,10 +315,10 @@ export default function Kanban({ stages, leads }: { stages: readonly string[]; l
         </div>
       </div>
 
-      {/* MODE 1: FIT SCREEN (Zero Horizontal Scroll - All Columns Side by Side) */}
+      {/* MODE 1: FIT SCREEN (Zero Horizontal Scroll + Colored Columns & Cards) */}
       {viewMode === "fit" && (
         <div
-          className={`grid gap-2 ${
+          className={`grid gap-2.5 ${
             stages.length <= 6
               ? "grid-cols-2 sm:grid-cols-3 xl:grid-cols-6"
               : "grid-cols-2 sm:grid-cols-4 xl:grid-cols-8"
@@ -153,8 +326,8 @@ export default function Kanban({ stages, leads }: { stages: readonly string[]; l
         >
           {stages.map((st) => {
             const col = items.filter((l) => l.stage === st);
-            const isWon = st === "won" || st === "enrolled";
-            const isLost = st === "lost";
+            const theme = STAGE_THEMES[st] ?? DEFAULT_THEME;
+
             return (
               <div
                 key={st}
@@ -164,28 +337,23 @@ export default function Kanban({ stages, leads }: { stages: readonly string[]; l
                 }}
                 onDragLeave={() => setOver(null)}
                 onDrop={(e) => drop(st, e.dataTransfer.getData("text/plain"))}
-                className={`flex flex-col rounded-xl p-2 transition min-h-[360px] ${
-                  over === st
-                    ? "bg-amber-50 border-2 border-dashed border-gold shadow-md"
-                    : isWon
-                    ? "bg-emerald-50/40 border border-emerald-200/60"
-                    : isLost
-                    ? "bg-slate-100/50 border border-slate-200/50 opacity-90"
-                    : "bg-slate-100/70 border border-slate-200/70"
+                className={`flex flex-col rounded-xl p-2 transition min-h-[380px] border-t-4 ${theme.topBorder} ${theme.bg} ${theme.borderColor} border shadow-2xs ${
+                  over === st ? "ring-2 ring-gold bg-amber-50 shadow-md" : ""
                 }`}
               >
                 {/* Column Header */}
-                <div className="flex items-center justify-between border-b border-slate-200/60 pb-1.5 mb-2 px-1">
-                  <h3 className="text-[11px] font-bold uppercase tracking-wider text-navy-950 truncate" title={label(st)}>
-                    {label(st)}
-                  </h3>
+                <div className="flex items-center justify-between border-b border-slate-200/80 pb-2 mb-2 px-1">
+                  <div className="flex items-center gap-1.5 truncate">
+                    <span className={`h-2.5 w-2.5 rounded-full ${theme.headerDot} shrink-0`} />
+                    <h3 className="text-[11px] font-black uppercase tracking-wider text-navy-950 truncate" title={label(st)}>
+                      {label(st)}
+                    </h3>
+                  </div>
                   <span
-                    className={`rounded-full px-1.5 py-0.2 text-[10px] font-extrabold ${
+                    className={`rounded-full px-2 py-0.5 text-[10px] font-black shadow-2xs ${
                       col.length > 0
-                        ? isWon
-                          ? "bg-emerald-600 text-white"
-                          : "bg-navy-900 text-white"
-                        : "bg-white text-slate-500 shadow-2xs"
+                        ? `${theme.badgeBg} ${theme.badgeText}`
+                        : "bg-white text-slate-500 border border-slate-200/80"
                     }`}
                   >
                     {col.length}
@@ -199,20 +367,23 @@ export default function Kanban({ stages, leads }: { stages: readonly string[]; l
                       key={l.id}
                       draggable
                       onDragStart={(e) => e.dataTransfer.setData("text/plain", l.id)}
-                      className="group cursor-grab rounded-lg border border-slate-200 bg-white p-2.5 shadow-2xs hover:border-gold hover:shadow-xs transition active:cursor-grabbing"
+                      className={`group cursor-grab rounded-xl border border-slate-200/90 border-l-4 ${theme.cardBorder} bg-white p-2.5 shadow-xs hover:shadow-md hover:border-navy-border/40 transition active:cursor-grabbing`}
                     >
+                      {/* Card Title & Score */}
                       <div className="flex items-start justify-between gap-1.5">
                         <Link
                           href={`/leads/${l.id}`}
-                          className="text-xs font-bold text-navy hover:text-gold-dark hover:underline truncate leading-snug"
+                          className="text-xs font-bold text-navy-950 hover:text-gold hover:underline truncate leading-snug"
                           title={leadName(l)}
                         >
                           {leadName(l)}
                         </Link>
                         <span
-                          className={`shrink-0 rounded-full px-1.5 text-[10px] font-bold ${
+                          className={`shrink-0 rounded-full px-1.5 text-[10px] font-extrabold ${
                             l.score >= 50
                               ? "bg-red-50 text-red-700 border border-red-200"
+                              : l.score >= 25
+                              ? "bg-amber-50 text-amber-800 border border-gold/40"
                               : "bg-slate-100 text-slate-600"
                           }`}
                         >
@@ -220,19 +391,27 @@ export default function Kanban({ stages, leads }: { stages: readonly string[]; l
                         </span>
                       </div>
 
-                      <p className="mt-1 line-clamp-2 text-[11px] text-slate-500 leading-tight">
-                        {l.service_interest || l.requirement_summary || "—"}
-                      </p>
+                      {/* Service / Requirement Pill */}
+                      {(l.service_interest || l.requirement_summary) && (
+                        <div className="mt-1.5">
+                          <span className="inline-block max-w-full truncate rounded bg-navy-50/70 border border-navy-border/20 px-1.5 py-0.5 text-[10px] font-semibold text-navy">
+                            {l.service_interest || l.requirement_summary}
+                          </span>
+                        </div>
+                      )}
 
+                      {/* Card Footer: Owner & Time */}
                       <div className="mt-2 flex items-center justify-between text-[10px] text-slate-400 border-t border-slate-100 pt-1.5">
-                        <span className="truncate max-w-[70px]">{l.owner_name || "Unassigned"}</span>
+                        <span className="truncate max-w-[70px] font-medium text-slate-600">
+                          {l.owner_name || "Unassigned"}
+                        </span>
                         <span className="shrink-0">{ago(l.last_inbound_at)}</span>
                       </div>
                     </div>
                   ))}
 
                   {col.length === 0 && (
-                    <div className="flex flex-1 items-center justify-center rounded-lg border border-dashed border-slate-200/80 p-2 text-center text-[10px] text-slate-400">
+                    <div className="flex flex-1 items-center justify-center rounded-lg border border-dashed border-slate-300/80 p-2 text-center text-[10px] text-slate-400 font-medium">
                       Drag here
                     </div>
                   )}
@@ -243,11 +422,13 @@ export default function Kanban({ stages, leads }: { stages: readonly string[]; l
         </div>
       )}
 
-      {/* MODE 2: WIDE SCROLL (Original horizontal scroll layout) */}
+      {/* MODE 2: WIDE SCROLL (Horizontal Scroll Mode with Full Color Styling) */}
       {viewMode === "scroll" && (
         <div className="flex gap-3 overflow-x-auto pb-4">
           {stages.map((st) => {
             const col = items.filter((l) => l.stage === st);
+            const theme = STAGE_THEMES[st] ?? DEFAULT_THEME;
+
             return (
               <div
                 key={st}
@@ -257,15 +438,16 @@ export default function Kanban({ stages, leads }: { stages: readonly string[]; l
                 }}
                 onDragLeave={() => setOver(null)}
                 onDrop={(e) => drop(st, e.dataTransfer.getData("text/plain"))}
-                className={`flex w-64 shrink-0 flex-col rounded-xl p-2.5 transition ${
-                  over === st
-                    ? "bg-amber-50 border-2 border-dashed border-gold"
-                    : "bg-slate-100/80 border border-slate-200/60"
+                className={`flex w-64 shrink-0 flex-col rounded-xl p-2.5 transition border-t-4 ${theme.topBorder} ${theme.bg} ${theme.borderColor} border shadow-2xs ${
+                  over === st ? "ring-2 ring-gold bg-amber-50 shadow-md" : ""
                 }`}
               >
-                <div className="flex items-center justify-between px-2 py-1.5 border-b border-slate-200/50 mb-2">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-navy-950">{label(st)}</h3>
-                  <span className="rounded-full bg-white px-2 py-0.5 text-xs font-bold text-slate-600 shadow-2xs">
+                <div className="flex items-center justify-between border-b border-slate-200/80 pb-2 mb-2 px-1">
+                  <div className="flex items-center gap-1.5 truncate">
+                    <span className={`h-2.5 w-2.5 rounded-full ${theme.headerDot} shrink-0`} />
+                    <h3 className="text-xs font-black uppercase tracking-wider text-navy-950 truncate">{label(st)}</h3>
+                  </div>
+                  <span className={`rounded-full px-2 py-0.5 text-xs font-black shadow-2xs ${theme.badgeBg} ${theme.badgeText}`}>
                     {col.length}
                   </span>
                 </div>
@@ -275,30 +457,36 @@ export default function Kanban({ stages, leads }: { stages: readonly string[]; l
                       key={l.id}
                       draggable
                       onDragStart={(e) => e.dataTransfer.setData("text/plain", l.id)}
-                      className="cursor-grab rounded-lg border border-slate-200 bg-white p-3 shadow-xs hover:border-navy-border/40 transition active:cursor-grabbing"
+                      className={`cursor-grab rounded-xl border border-slate-200/90 border-l-4 ${theme.cardBorder} bg-white p-3 shadow-xs hover:shadow-md hover:border-navy-border/40 transition active:cursor-grabbing`}
                     >
                       <div className="flex items-start justify-between gap-2">
                         <Link
                           href={`/leads/${l.id}`}
-                          className="text-sm font-semibold text-navy hover:text-gold-dark hover:underline leading-snug"
+                          className="text-sm font-bold text-navy-950 hover:text-gold hover:underline leading-snug truncate"
                         >
                           {leadName(l)}
                         </Link>
                         <span
-                          className={`rounded-full px-1.5 text-xs font-bold ${
+                          className={`rounded-full px-1.5 text-xs font-extrabold ${
                             l.score >= 50
                               ? "bg-red-50 text-red-700 border border-red-200"
+                              : l.score >= 25
+                              ? "bg-amber-50 text-amber-800 border border-gold/40"
                               : "bg-slate-100 text-slate-600"
                           }`}
                         >
                           {l.score}
                         </span>
                       </div>
-                      <p className="mt-1 line-clamp-2 text-xs text-slate-500">
-                        {l.service_interest || l.requirement_summary || "—"}
-                      </p>
-                      <p className="mt-2 flex justify-between text-[11px] text-slate-400">
-                        <span>{l.owner_name || "Unassigned"}</span>
+                      {(l.service_interest || l.requirement_summary) && (
+                        <div className="mt-1.5">
+                          <span className="inline-block max-w-full truncate rounded bg-navy-50/70 border border-navy-border/20 px-2 py-0.5 text-xs font-semibold text-navy">
+                            {l.service_interest || l.requirement_summary}
+                          </span>
+                        </div>
+                      )}
+                      <p className="mt-2 flex justify-between text-[11px] text-slate-400 border-t border-slate-100 pt-1.5">
+                        <span className="font-medium text-slate-600">{l.owner_name || "Unassigned"}</span>
                         <span>{ago(l.last_inbound_at)}</span>
                       </p>
                     </div>
@@ -340,53 +528,58 @@ export default function Kanban({ stages, leads }: { stages: readonly string[]; l
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {filteredItems.map((l) => (
-                  <tr key={l.id} className="hover:bg-slate-50/80 transition">
-                    <td className="p-3">
-                      <Link href={`/leads/${l.id}`} className="font-bold text-navy hover:text-gold hover:underline">
-                        {leadName(l)}
-                      </Link>
-                      {l.email && <p className="text-[11px] text-slate-400">{l.email}</p>}
-                    </td>
-                    <td className="p-3 max-w-xs truncate text-slate-600">
-                      {l.service_interest || l.requirement_summary || "—"}
-                    </td>
-                    <td className="p-3">
-                      <select
-                        value={l.stage || ""}
-                        onChange={(e) => drop(e.target.value, l.id)}
-                        className="rounded-lg border border-slate-200 bg-white px-2 py-1 text-xs font-semibold text-slate-700 shadow-2xs hover:border-gold focus:outline-none"
-                      >
-                        {stages.map((st) => (
-                          <option key={st} value={st}>
-                            {label(st)}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                    <td className="p-3">
-                      <span
-                        className={`rounded-full px-2 py-0.5 font-bold ${
-                          l.score >= 50
-                            ? "bg-red-50 text-red-700 border border-red-200"
-                            : "bg-slate-100 text-slate-600"
-                        }`}
-                      >
-                        {l.score}
-                      </span>
-                    </td>
-                    <td className="p-3 text-slate-600">{l.owner_name || "Unassigned"}</td>
-                    <td className="p-3 text-slate-400">{ago(l.last_inbound_at)}</td>
-                    <td className="p-3 text-right">
-                      <Link
-                        href={`/leads/${l.id}`}
-                        className="rounded-lg bg-navy px-2.5 py-1 text-[11px] font-semibold text-white hover:bg-navy-900 transition"
-                      >
-                        Open &rarr;
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
+                {filteredItems.map((l) => {
+                  const theme = STAGE_THEMES[l.stage || ""] ?? DEFAULT_THEME;
+                  return (
+                    <tr key={l.id} className="hover:bg-slate-50/80 transition">
+                      <td className="p-3">
+                        <Link href={`/leads/${l.id}`} className="font-bold text-navy hover:text-gold hover:underline">
+                          {leadName(l)}
+                        </Link>
+                        {l.email && <p className="text-[11px] text-slate-400">{l.email}</p>}
+                      </td>
+                      <td className="p-3 max-w-xs truncate text-slate-600">
+                        {l.service_interest || l.requirement_summary || "—"}
+                      </td>
+                      <td className="p-3">
+                        <select
+                          value={l.stage || ""}
+                          onChange={(e) => drop(e.target.value, l.id)}
+                          className={`rounded-lg border px-2 py-1 text-xs font-bold shadow-2xs focus:outline-none ${theme.pillBg}`}
+                        >
+                          {stages.map((st) => (
+                            <option key={st} value={st}>
+                              {label(st)}
+                            </option>
+                          ))}
+                        </select>
+                      </td>
+                      <td className="p-3">
+                        <span
+                          className={`rounded-full px-2 py-0.5 font-bold ${
+                            l.score >= 50
+                              ? "bg-red-50 text-red-700 border border-red-200"
+                              : l.score >= 25
+                              ? "bg-amber-50 text-amber-800 border border-gold/40"
+                              : "bg-slate-100 text-slate-600"
+                          }`}
+                        >
+                          {l.score}
+                        </span>
+                      </td>
+                      <td className="p-3 text-slate-600">{l.owner_name || "Unassigned"}</td>
+                      <td className="p-3 text-slate-400">{ago(l.last_inbound_at)}</td>
+                      <td className="p-3 text-right">
+                        <Link
+                          href={`/leads/${l.id}`}
+                          className="rounded-lg bg-navy px-2.5 py-1 text-[11px] font-semibold text-white hover:bg-navy-900 transition"
+                        >
+                          Open &rarr;
+                        </Link>
+                      </td>
+                    </tr>
+                  );
+                })}
                 {filteredItems.length === 0 && (
                   <tr>
                     <td colSpan={7} className="p-8 text-center text-slate-400">
