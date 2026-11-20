@@ -79,6 +79,12 @@ export async function closeHandoff(form: FormData) {
   revalidatePath("/handoffs");
 }
 
+export async function reopenHandoff(form: FormData) {
+  await requireSession();
+  await write("update crm.handoffs set status = 'Open', closed_at = null where id = $1", [Number(form.get("id"))]);
+  revalidatePath("/handoffs");
+}
+
 export async function saveSettings(_: ActionState, form: FormData): Promise<ActionState> {
   const s = await requireSession();
   if (!canManageSettings(s)) return { error: "Only the founder or AI specialist can change settings." };
