@@ -1,20 +1,73 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand: #0f766e;
-  --color-brand-dark: #134e4a;
-  --color-ink: #0b1220;
+  --color-navy: #28245F;
+  --color-navy-950: #141133;
+  --color-navy-900: #1D194B;
+  --color-navy-card: #221E53;
+  --color-navy-surface: #2D2969;
+  --color-navy-border: #3F3983;
+  --color-navy-light: #3E3887;
+  --color-navy-lighter: #5850AE;
+
+  --color-gold: #FBAE44;
+  --color-gold-light: #FCCD7B;
+  --color-gold-dark: #E39527;
+  --color-gold-glow: rgba(251, 174, 68, 0.35);
+  --color-gold-subtle: rgba(251, 174, 68, 0.12);
+  --color-gold-border: rgba(251, 174, 68, 0.30);
+
+  --color-brand: #28245F;
+  --color-brand-dark: #1D194B;
+  --color-ink: #141133;
+
+  --font-sans: var(--font-poppins), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 @layer base {
-  body { @apply bg-slate-50 text-slate-900 antialiased; }
+  body {
+    @apply bg-slate-50 text-slate-900 antialiased;
+    font-family: var(--font-poppins), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+
+  ::selection {
+    background-color: #FBAE44;
+    color: #141133;
+  }
 }
 
-@utility card { @apply rounded-xl border border-slate-200 bg-white; }
-@utility btn { @apply inline-flex items-center justify-center gap-1 rounded-lg px-3 py-1.5 text-sm font-medium transition disabled:opacity-50; }
-@utility btn-primary { @apply inline-flex items-center justify-center gap-1 rounded-lg bg-brand px-3 py-1.5 text-sm font-medium text-white transition hover:bg-brand-dark disabled:opacity-50; }
-@utility btn-ghost { @apply inline-flex items-center justify-center gap-1 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium transition hover:bg-slate-100 disabled:opacity-50; }
-@utility input { @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/20; }
-@utility label { @apply mb-1 block text-xs font-medium text-slate-500; }
-@utility th { @apply px-3 py-2 text-left text-xs font-medium uppercase tracking-wide text-slate-500; }
-@utility td { @apply px-3 py-2 text-sm; }
+@utility card {
+  @apply rounded-xl border border-slate-200/90 bg-white shadow-xs;
+}
+
+@utility btn {
+  @apply inline-flex items-center justify-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition active:scale-[0.98] disabled:opacity-50;
+}
+
+@utility btn-primary {
+  @apply inline-flex items-center justify-center gap-1.5 rounded-lg bg-navy px-3.5 py-1.5 text-sm font-semibold text-white shadow-sm transition hover:bg-navy-900 active:scale-[0.98] disabled:opacity-50;
+}
+
+@utility btn-gold {
+  @apply inline-flex items-center justify-center gap-1.5 rounded-lg bg-gold px-3.5 py-1.5 text-sm font-semibold text-navy-950 shadow-sm transition hover:bg-gold-dark active:scale-[0.98] disabled:opacity-50;
+}
+
+@utility btn-ghost {
+  @apply inline-flex items-center justify-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50 hover:border-slate-400 active:scale-[0.98] disabled:opacity-50;
+}
+
+@utility input {
+  @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-navy focus:ring-2 focus:ring-gold/30;
+}
+
+@utility label {
+  @apply mb-1 block text-xs font-semibold tracking-wide text-slate-600;
+}
+
+@utility th {
+  @apply px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 bg-slate-50/70;
+}
+
+@utility td {
+  @apply px-3 py-2.5 text-sm;
+}

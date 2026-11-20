@@ -62,58 +62,94 @@ export default async function Dashboard() {
 
   return (
     <>
-      <PageTitle title={`Hello, ${s.name.split(" ")[0]}`} sub="Your Monday numbers, live." />
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
+      <PageTitle title={`Hello, ${s.name.split(" ")[0]}`} sub="Live DCS CRM performance & metrics overview" />
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {tiles.map(([t, v, h], i) => (
-          <div key={t} className={`card p-4 ${i === 6 ? "border-red-200 bg-red-50" : ""}`}>
-            <p className="text-xs font-medium text-slate-500">{t}</p>
-            <p className="mt-1 text-3xl font-bold">{v}</p>
-            <p className="text-xs text-slate-400">{h}</p>
+          <div
+            key={t}
+            className={`card p-5 transition hover:border-navy-border/40 hover:shadow-sm ${
+              i === 6 ? "border-amber-300/80 bg-amber-50/40" : ""
+            }`}
+          >
+            <p className="text-xs font-semibold tracking-wide text-slate-500 uppercase">{t}</p>
+            <p className="mt-1 text-3xl font-extrabold tracking-tight text-navy-950">{v}</p>
+            <p className="mt-1 text-xs text-slate-400">{h}</p>
           </div>
         ))}
       </div>
 
       <div className="mt-6 grid gap-6 xl:grid-cols-3">
-        <section className="card p-4 xl:col-span-2">
-          <h2 className="mb-3 font-semibold">Hot leads: call today</h2>
+        <section className="card p-5 xl:col-span-2">
+          <div className="mb-3 flex items-center justify-between">
+            <h2 className="font-bold text-navy-950">Hot leads: call today</h2>
+            <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-800">Priority</span>
+          </div>
           <LeadMiniTable leads={hot} empty="No hot leads right now." />
         </section>
-        <section className="card p-4">
-          <h2 className="mb-3 font-semibold">New leads by channel (7d)</h2>
-          {bySource.length === 0 && <p className="text-sm text-slate-400">No leads yet.</p>}
-          <div className="space-y-2">
+
+        <section className="card p-5">
+          <h2 className="mb-3 font-bold text-navy-950">Leads by channel (7d)</h2>
+          <div className="space-y-3">
             {bySource.map((r) => (
               <div key={r.source}>
-                <div className="flex justify-between text-sm"><span className="capitalize">{r.source}</span><span className="font-semibold">{r.leads}</span></div>
-                <div className="h-2 rounded bg-slate-100"><div className="h-2 rounded bg-brand" style={{ width: `${(r.leads / maxSrc) * 100}%` }} /></div>
+                <div className="flex justify-between text-xs font-medium text-slate-600">
+                  <span className="capitalize">{r.source}</span>
+                  <span className="font-bold text-navy-950">{r.leads}</span>
+                </div>
+                <div className="mt-1.5 h-2 rounded-full bg-slate-100 overflow-hidden">
+                  <div
+                    className="h-2 rounded-full bg-navy transition-all duration-500"
+                    style={{ width: `${(r.leads / maxSrc) * 100}%` }}
+                  />
+                </div>
               </div>
             ))}
+            {bySource.length === 0 && <p className="text-sm text-slate-400">No leads in the last 7 days.</p>}
           </div>
         </section>
-        <section className="card p-4 xl:col-span-3">
-          <h2 className="mb-3 font-semibold">Follow-ups due</h2>
-          <LeadMiniTable leads={followUps} empty="Nothing due." />
-        </section>
       </div>
+
+      <section className="card mt-6 p-5">
+        <h2 className="mb-3 font-bold text-navy-950">Follow-ups due (next 24 hours)</h2>
+        <LeadMiniTable leads={followUps} empty="No follow-ups due soon." showFollowUp />
+      </section>
     </>
   );
 }
 
-function LeadMiniTable({ leads, empty }: { leads: Lead[]; empty: string }) {
-  if (!leads.length) return <p className="text-sm text-slate-400">{empty}</p>;
+function LeadMiniTable({ leads, empty, showFollowUp }: { leads: Lead[]; empty: string; showFollowUp?: boolean }) {
+  if (leads.length === 0) return <p className="text-sm text-slate-400">{empty}</p>;
   return (
-    <table className="w-full">
-      <tbody className="divide-y divide-slate-100">
-        {leads.map((l) => (
-          <tr key={l.id} className="hover:bg-slate-50">
-            <td className="td"><Link href={`/leads/${l.id}`} className="font-medium text-brand hover:underline">{leadName(l)}</Link>
-              <p className="text-xs text-slate-400">{l.company || l.service_interest || ""}</p></td>
-            <td className="td"><StageBadge stage={l.stage} /></td>
-            <td className="td"><ScoreBadge score={l.score} /></td>
-            <td className="td text-xs text-slate-500">{ago(l.last_inbound_at)}</td>
+    <div className="overflow-x-auto">
+      <table className="w-full">
+        <thead>
+          <tr className="border-b border-slate-200">
+            <th className="th">Lead</th>
+            <th className="th">Stage</th>
+            <th className="th">Score</th>
+            <th className="th">Owner</th>
+            <th className="th">{showFollowUp ? "Due" : "Last message"}</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody className="divide-y divide-slate-100">
+          {leads.map((l) => (
+            <tr key={l.id} className="hover:bg-slate-50/80 transition">
+              <td className="td">
+                <Link href={`/leads/${l.id}`} className="font-semibold text-navy hover:text-gold-dark hover:underline">
+                  {leadName(l)}
+                </Link>
+                <p className="text-xs text-slate-400">{l.service_interest || l.company || "—"}</p>
+              </td>
+              <td className="td"><StageBadge stage={l.stage} /></td>
+              <td className="td"><ScoreBadge score={l.score} /></td>
+              <td className="td text-slate-600">{l.owner_name || <span className="text-slate-400">—</span>}</td>
+              <td className="td text-xs text-slate-500">
+                {showFollowUp && l.next_follow_up ? ago(l.next_follow_up) : ago(l.last_inbound_at)}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }

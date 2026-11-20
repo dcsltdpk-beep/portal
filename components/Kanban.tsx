@@ -31,26 +31,52 @@ export default function Kanban({ stages, leads }: { stages: readonly string[]; l
         {stages.map((st) => {
           const col = items.filter((l) => l.stage === st);
           return (
-            <div key={st}
+            <div
+              key={st}
               onDragOver={(e) => { e.preventDefault(); setOver(st); }}
               onDragLeave={() => setOver(null)}
               onDrop={(e) => drop(st, e.dataTransfer.getData("text/plain"))}
-              className={`flex w-64 shrink-0 flex-col rounded-xl p-2 ${over === st ? "bg-teal-100" : "bg-slate-100"}`}>
-              <div className="flex items-center justify-between px-2 py-1.5">
-                <h3 className="text-sm font-semibold">{label(st)}</h3>
-                <span className="text-xs text-slate-500">{col.length}</span>
+              className={`flex w-64 shrink-0 flex-col rounded-xl p-2 transition ${
+                over === st
+                  ? "bg-amber-50 border-2 border-dashed border-gold"
+                  : "bg-slate-100/80 border border-slate-200/60"
+              }`}
+            >
+              <div className="flex items-center justify-between px-2 py-1.5 border-b border-slate-200/50 mb-2">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-navy-950">{label(st)}</h3>
+                <span className="rounded-full bg-white px-2 py-0.5 text-xs font-bold text-slate-600 shadow-2xs">
+                  {col.length}
+                </span>
               </div>
               <div className="flex min-h-24 flex-col gap-2">
                 {col.map((l) => (
-                  <div key={l.id} draggable onDragStart={(e) => e.dataTransfer.setData("text/plain", l.id)}
-                    className="cursor-grab rounded-lg border border-slate-200 bg-white p-3 shadow-sm active:cursor-grabbing">
+                  <div
+                    key={l.id}
+                    draggable
+                    onDragStart={(e) => e.dataTransfer.setData("text/plain", l.id)}
+                    className="cursor-grab rounded-lg border border-slate-200 bg-white p-3 shadow-xs hover:border-navy-border/40 transition active:cursor-grabbing"
+                  >
                     <div className="flex items-start justify-between gap-2">
-                      <Link href={`/leads/${l.id}`} className="text-sm font-medium text-brand hover:underline">{leadName(l)}</Link>
-                      <span className={`rounded-full px-1.5 text-xs font-semibold ${l.score >= 50 ? "bg-red-100 text-red-700" : "bg-slate-100 text-slate-600"}`}>{l.score}</span>
+                      <Link
+                        href={`/leads/${l.id}`}
+                        className="text-sm font-semibold text-navy hover:text-gold-dark hover:underline leading-snug"
+                      >
+                        {leadName(l)}
+                      </Link>
+                      <span
+                        className={`rounded-full px-1.5 text-xs font-bold ${
+                          l.score >= 50
+                            ? "bg-red-50 text-red-700 border border-red-200"
+                            : "bg-slate-100 text-slate-600"
+                        }`}
+                      >
+                        {l.score}
+                      </span>
                     </div>
                     <p className="mt-1 line-clamp-2 text-xs text-slate-500">{l.service_interest || l.requirement_summary || "—"}</p>
                     <p className="mt-2 flex justify-between text-[11px] text-slate-400">
-                      <span>{l.owner_name || "Unassigned"}</span><span>{ago(l.last_inbound_at)}</span>
+                      <span>{l.owner_name || "Unassigned"}</span>
+                      <span>{ago(l.last_inbound_at)}</span>
                     </p>
                   </div>
                 ))}
