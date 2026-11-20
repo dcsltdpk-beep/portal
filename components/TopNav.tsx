@@ -19,7 +19,7 @@ export default function TopNav({ name, role, inboxCount, handoffsCount }: Props)
     if (path.startsWith("/leads")) return { title: "Leads Directory", sub: "Manage, filter and score inbound inquiries" };
     if (path.startsWith("/pipelines/services")) return { title: "Services Pipeline", sub: "B2B Deals and Client Engagements" };
     if (path.startsWith("/pipelines/academy")) return { title: "Academy Pipeline", sub: "Admissions, Students & Counselling" };
-    if (path.startsWith("/inbox")) return { title: "Smart Inbox", sub: "AI agent drafts and Gmail interactions" };
+    if (path.startsWith("/inbox")) return { title: "Omnichannel Inbox", sub: "Multi-agent messaging: Gmail, WhatsApp, Facebook & Instagram" };
     if (path.startsWith("/handoffs")) return { title: "Handoffs Queue", sub: "Urgent conversations escalated to team" };
     if (path.startsWith("/settings")) return { title: "CRM Settings", sub: "Scoring rules and portal configurations" };
     return { title: "DCS CRM", sub: "Dream Cyber Security" };
