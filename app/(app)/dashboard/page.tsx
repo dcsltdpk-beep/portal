@@ -2,20 +2,33 @@ import Link from "next/link";
 import { requireSession, leadScope } from "@/lib/auth";
 import { q, q1 } from "@/lib/db";
 import DashboardLeadTabs from "@/components/DashboardLeadTabs";
+import { ago } from "@/lib/format";
 import type { Lead } from "@/lib/types";
 
 type Kpis = {
   new_7d: number; hot_open: number; open_handoffs: number; emails_waiting: number;
   median_reply_min: number | null; qualified_rate: number | null; calls_7d: number;
   proposals_30d: number; won_30d: number; academy_inquiries_30d: number; enrolled_30d: number;
+  emails_auto_replied_7d: number; emails_auto_replied_total: number;
+};
+
+type AutoReplyEmail = {
+  id: number;
+  lead_id: string | null;
+  from_addr: string | null;
+  to_addr: string | null;
+  subject: string | null;
+  sent_by: string | null;
+  created_at: string;
+  lead_name: string | null;
 };
 
 export default async function Dashboard() {
   const s = await requireSession();
   const scope = leadScope(s, "l", 1);
 
-  // Execute all 4 queries concurrently in parallel to eliminate page delay
-  const [k, bySource, hot, followUps] = await Promise.all([
+  // Execute all queries concurrently in parallel to eliminate page delay
+  const [k, bySource, hot, followUps, recentAutoReplies] = await Promise.all([
     q1<Kpis>(`
       with hot as (select value::int v from crm.settings where key = 'hot_score')
       select
@@ -30,7 +43,9 @@ export default async function Dashboard() {
         (select count(*)::int from crm.activities where type = 'stage_change' and content like '%-> proposal_sent%' and created_at > now() - interval '30 days') as proposals_30d,
         (select count(*)::int from crm.activities where type = 'stage_change' and content like '%-> won%' and created_at > now() - interval '30 days') as won_30d,
         (select count(*)::int from crm.leads where pipeline = 'academy' and created_at > now() - interval '30 days') as academy_inquiries_30d,
-        (select count(*)::int from crm.activities where type = 'stage_change' and content like '%-> enrolled%' and created_at > now() - interval '30 days') as enrolled_30d
+        (select count(*)::int from crm.activities where type = 'stage_change' and content like '%-> enrolled%' and created_at > now() - interval '30 days') as enrolled_30d,
+        (select count(*)::int from crm.emails where (status = 'auto_replied' or sent_by like 'ai:%') and created_at > now() - interval '7 days') as emails_auto_replied_7d,
+        (select count(*)::int from crm.emails where (status = 'auto_replied' or sent_by like 'ai:%')) as emails_auto_replied_total
     `),
     q<{ source: string; leads: number }>(`
       select coalesce(source,'unknown') as source, count(*)::int as leads from crm.leads
@@ -49,6 +64,13 @@ export default async function Dashboard() {
          and coalesce(l.stage,'') not in ('won','lost','enrolled')
        order by l.next_follow_up limit 15
     `, scope.params),
+    q<AutoReplyEmail>(`
+      select e.id, e.lead_id, e.from_addr, e.to_addr, e.subject, e.sent_by, e.created_at, l.name as lead_name
+      from crm.emails e
+      left join crm.leads l on l.id = e.lead_id
+      where (e.status = 'auto_replied' or e.sent_by like 'ai:%')
+      order by e.created_at desc limit 4
+    `),
   ]);
 
   const maxSrc = Math.max(1, ...bySource.map((r) => r.leads));
@@ -56,7 +78,7 @@ export default async function Dashboard() {
 
   return (
     <div className="space-y-6">
-      {/* Top Hero KPI Row (Inspired by modern SaaS Analytics Layout) */}
+      {/* Top Hero KPI Row */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {/* Card 1: Featured Brand Gradient Hero Card */}
         <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-navy via-navy-900 to-navy-950 p-5 text-white shadow-md">
@@ -142,42 +164,102 @@ export default async function Dashboard() {
           </div>
         </div>
 
-        {/* Card 4: Speed to First Reply & Inbox */}
+        {/* Card 4: AI Auto-Pilot & First Touch Speed */}
         <div className="card p-5 flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Response Speed</span>
-            <span className="rounded-full bg-emerald-50 text-emerald-700 px-2 py-0.5 text-[10px] font-bold">Target &lt; 5m</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">AI Auto-Pilot</span>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/80 px-2.5 py-0.5 text-[10px] font-bold">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              Active
+            </span>
           </div>
 
           <div className="mt-2">
             <div className="flex items-baseline gap-2">
               <span className="text-3xl font-extrabold tracking-tight text-navy-950">
-                {k?.median_reply_min != null ? `${k.median_reply_min} min` : "—"}
+                {k?.emails_auto_replied_7d ?? 0}
               </span>
-              <span className="text-xs font-medium text-slate-500">Median</span>
+              <span className="text-xs font-semibold text-emerald-600">Auto-Replies (7d)</span>
             </div>
-            <p className="text-[11px] text-slate-500 mt-0.5">Automated AI + Team First Touch</p>
+            <p className="text-[11px] text-slate-500 mt-0.5">
+              Speed: {k?.median_reply_min != null ? `${k.median_reply_min}m` : "< 1m instant"} · Total: {k?.emails_auto_replied_total ?? 0}
+            </p>
           </div>
 
           <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
-            <Link href="/inbox" className="font-medium text-navy hover:text-gold-dark hover:underline flex items-center gap-1">
-              <span>Emails Waiting:</span>
-              <span className="font-bold text-amber-700">({k?.emails_waiting ?? 0})</span>
+            <Link href="/inbox?f=auto" className="font-bold text-navy hover:text-gold-dark hover:underline flex items-center gap-1">
+              <span>View AI Replies &rarr;</span>
             </Link>
-            <span className="text-[10px] text-slate-400">Needs reply</span>
+            <span className="text-[11px] text-slate-400">
+              {k?.emails_waiting ?? 0} need human
+            </span>
           </div>
         </div>
       </div>
 
-      {/* Main Operational View: 2 Balanced Columns (Zero Excessive Vertical Scroll) */}
+      {/* Main Operational View: 2 Balanced Columns */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 items-start">
         {/* Left Column (8 cols ~ 67%): Interactive Hot Leads & Follow-ups Table */}
         <div className="lg:col-span-8 space-y-4">
           <DashboardLeadTabs hotLeads={hot} followUps={followUps} />
         </div>
 
-        {/* Right Column (4 cols ~ 33%): Channel Breakdown & Quick Pipeline Nav */}
+        {/* Right Column (4 cols ~ 33%): Channel Breakdown, Recent Auto-Replies & Pipelines */}
         <div className="lg:col-span-4 space-y-5">
+          {/* Live Recent AI Auto-Replies Widget */}
+          <div className="card p-5 shadow-xs">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
+              <div className="flex items-center gap-2">
+                <span className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+                </span>
+                <h2 className="text-xs font-bold uppercase tracking-wider text-navy-950">Recent AI Auto-Replies</h2>
+              </div>
+              <Link href="/inbox?f=auto" className="text-[11px] font-semibold text-navy hover:text-gold-dark transition">
+                All ({k?.emails_auto_replied_total ?? 0}) &rarr;
+              </Link>
+            </div>
+
+            <div className="space-y-2.5">
+              {recentAutoReplies.map((r) => {
+                const agentLabel = r.sent_by ? r.sent_by.replace(/^ai:/, "").replace(/_/g, " ") : "AI Agent";
+                return (
+                  <Link
+                    key={r.id}
+                    href={`/inbox?f=auto&open=${r.id}`}
+                    className="block rounded-xl bg-slate-50/80 p-3 transition hover:bg-emerald-50/60 hover:border-emerald-200 border border-slate-200/60"
+                  >
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="font-semibold text-navy-950 truncate max-w-[170px]">
+                        {r.lead_name || r.to_addr || r.from_addr}
+                      </span>
+                      <span className="text-[10px] text-slate-400 shrink-0">{ago(r.created_at)}</span>
+                    </div>
+                    <p className="truncate text-[11px] text-slate-600 font-medium mt-1">
+                      {r.subject || "(No subject)"}
+                    </p>
+                    <div className="mt-2 flex items-center justify-between">
+                      <span className="inline-flex items-center gap-1 rounded bg-emerald-100/80 px-1.5 py-0.5 text-[10px] font-bold text-emerald-800 uppercase tracking-wide">
+                        ✓ {agentLabel}
+                      </span>
+                      <span className="text-[10px] font-medium text-slate-400">Sent via Gmail</span>
+                    </div>
+                  </Link>
+                );
+              })}
+
+              {recentAutoReplies.length === 0 && (
+                <div className="py-5 text-center">
+                  <p className="text-xs text-slate-500 font-medium">No auto-replies logged yet.</p>
+                  <p className="text-[10px] text-slate-400 mt-1">
+                    Incoming emails will be auto-replied by n8n agents and show here live.
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+
           {/* Leads by Channel Card */}
           <div className="card p-5 shadow-xs">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">

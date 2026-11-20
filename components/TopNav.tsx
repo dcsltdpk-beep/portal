@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import AutoRefresh from "@/components/AutoRefresh";
 
 type Props = {
   name: string;
@@ -35,7 +36,10 @@ export default function TopNav({ name, role, inboxCount, handoffsCount }: Props)
       </div>
 
       {/* Middle & Right Actions */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2.5 sm:gap-3">
+        {/* Live Auto-Refresh sync indicator */}
+        <AutoRefresh intervalMs={15000} />
+
         {/* Quick Search Shortcut */}
         <Link
           href="/leads"
