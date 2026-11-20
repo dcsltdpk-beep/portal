@@ -34,6 +34,32 @@
     background-color: #FBAE44;
     color: #141133;
   }
+
+  /* Global Custom DCS Branded Scrollbar */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(40, 36, 95, 0.4) transparent;
+  }
+
+  ::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(40, 36, 95, 0.35);
+    border-radius: 9999px;
+    transition: all 0.25s ease;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(251, 174, 68, 0.9);
+    box-shadow: 0 0 10px rgba(251, 174, 68, 0.5);
+  }
 }
 
 @keyframes tabSwitch {
@@ -100,7 +126,7 @@
   animation: fadeInUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Hide scrollbars cleanly */
+/* Hide scrollbars utility */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
