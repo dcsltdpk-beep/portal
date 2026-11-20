@@ -26,7 +26,7 @@
 
 @layer base {
   body {
-    @apply bg-slate-50 text-slate-900 antialiased;
+    @apply bg-[#F4F5F8] text-slate-900 antialiased;
     font-family: var(--font-poppins), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   }
 
@@ -36,38 +36,79 @@
   }
 }
 
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(3deg);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(251, 174, 68, 0.25);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(251, 174, 68, 0.55);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-float {
+  animation: floatSlow 4s ease-in-out infinite;
+}
+
+.animate-glow {
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+.animate-fade-in {
+  animation: fadeInUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
 @utility card {
-  @apply rounded-xl border border-slate-200/90 bg-white shadow-xs;
+  @apply rounded-2xl border border-slate-200/80 bg-white shadow-[0_4px_20px_-4px_rgba(20,17,51,0.04)] transition-all duration-300 hover:shadow-[0_10px_28px_-6px_rgba(20,17,51,0.08)];
 }
 
 @utility btn {
-  @apply inline-flex items-center justify-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition active:scale-[0.98] disabled:opacity-50;
+  @apply inline-flex items-center justify-center gap-1.5 rounded-xl px-3 py-1.5 text-sm font-medium transition-all duration-200 active:scale-[0.97] disabled:opacity-50;
 }
 
 @utility btn-primary {
-  @apply inline-flex items-center justify-center gap-1.5 rounded-lg bg-navy px-3.5 py-1.5 text-sm font-semibold text-white shadow-sm transition hover:bg-navy-900 active:scale-[0.98] disabled:opacity-50;
+  @apply inline-flex items-center justify-center gap-1.5 rounded-xl bg-navy px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-navy-900 hover:shadow active:scale-[0.97] disabled:opacity-50;
 }
 
 @utility btn-gold {
-  @apply inline-flex items-center justify-center gap-1.5 rounded-lg bg-gold px-3.5 py-1.5 text-sm font-semibold text-navy-950 shadow-sm transition hover:bg-gold-dark active:scale-[0.98] disabled:opacity-50;
+  @apply inline-flex items-center justify-center gap-1.5 rounded-xl bg-gold px-4 py-2 text-sm font-semibold text-navy-950 shadow-sm transition-all duration-200 hover:bg-gold-dark hover:shadow active:scale-[0.97] disabled:opacity-50;
 }
 
 @utility btn-ghost {
-  @apply inline-flex items-center justify-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50 hover:border-slate-400 active:scale-[0.98] disabled:opacity-50;
+  @apply inline-flex items-center justify-center gap-1.5 rounded-xl border border-slate-300/80 bg-white px-3.5 py-1.5 text-sm font-medium text-slate-700 transition-all duration-200 hover:bg-slate-50 hover:border-slate-400 active:scale-[0.97] disabled:opacity-50;
 }
 
 @utility input {
-  @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-navy focus:ring-2 focus:ring-gold/30;
+  @apply w-full rounded-xl border border-slate-300/90 bg-white px-3.5 py-2 text-sm outline-none transition-all duration-200 focus:border-navy focus:ring-2 focus:ring-gold/30;
 }
 
 @utility label {
-  @apply mb-1 block text-xs font-semibold tracking-wide text-slate-600;
+  @apply mb-1.5 block text-xs font-semibold tracking-wide text-slate-600;
 }
 
 @utility th {
-  @apply px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 bg-slate-50/70;
+  @apply px-3.5 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-500 bg-slate-50/70;
 }
 
 @utility td {
-  @apply px-3 py-2.5 text-sm;
+  @apply px-3.5 py-3 text-sm;
 }
