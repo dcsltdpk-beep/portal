@@ -77,145 +77,213 @@ export default async function Dashboard() {
   const qualRate = k?.qualified_rate != null ? Math.min(100, Math.max(0, k.qualified_rate)) : 0;
 
   return (
-    <div className="space-y-4">
-      {/* Top Hero KPI Row */}
-      <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="space-y-3">
+      {/* Top Hero KPI Row (Sleek Compact 95px Height) */}
+      <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
         {/* Card 1: Featured Brand Gradient Hero Card */}
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-navy via-navy-900 to-navy-950 p-4 text-white shadow-xs">
-          <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-gold/15 blur-2xl" />
+        <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-navy via-navy-900 to-navy-950 p-3 text-white shadow-2xs flex flex-col justify-between">
+          <div className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-gold/15 blur-2xl" />
 
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-gold">Inbound Volume</span>
-            <span className="rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-semibold text-slate-200">7 Days</span>
+            <span className="text-[11px] font-bold uppercase tracking-wider text-gold">Inbound Volume</span>
+            <span className="rounded-full bg-white/10 px-2 py-0.2 text-[9px] font-semibold text-slate-200">7 Days</span>
           </div>
 
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-3xl font-extrabold tracking-tight">{k?.new_7d ?? 0}</span>
-            <span className="text-xs font-medium text-slate-300">Total Leads</span>
+          <div className="my-1 flex items-baseline gap-2">
+            <span className="text-2xl font-extrabold tracking-tight">{k?.new_7d ?? 0}</span>
+            <span className="text-[11px] font-medium text-slate-300">Total Leads</span>
           </div>
 
-          <div className="mt-2.5 flex items-center justify-between gap-1 border-t border-white/10 pt-2 text-[11px]">
-            <div>
-              <p className="text-slate-400">Calls</p>
-              <p className="font-bold text-white">{k?.calls_7d ?? 0}</p>
-            </div>
-            <div className="h-4 w-px bg-white/10" />
-            <div>
-              <p className="text-slate-400">Proposals</p>
-              <p className="font-bold text-white">{k?.proposals_30d ?? 0}</p>
-            </div>
-            <div className="h-4 w-px bg-white/10" />
-            <div>
-              <p className="text-slate-400">Deals Won</p>
-              <p className="font-bold text-gold">{k?.won_30d ?? 0}</p>
-            </div>
+          <div className="flex items-center justify-between gap-1 border-t border-white/10 pt-1.5 text-[10px]">
+            <span>Calls: <strong className="text-white">{k?.calls_7d ?? 0}</strong></span>
+            <span className="text-white/20">|</span>
+            <span>Props: <strong className="text-white">{k?.proposals_30d ?? 0}</strong></span>
+            <span className="text-white/20">|</span>
+            <span>Won: <strong className="text-gold">{k?.won_30d ?? 0}</strong></span>
           </div>
         </div>
 
         {/* Card 2: Hot Leads Action Card */}
-        <div className="card p-4 relative overflow-hidden flex flex-col justify-between hover:border-gold/40 transition">
+        <div className="card p-3 relative overflow-hidden flex flex-col justify-between hover:border-gold/40 transition">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Action Today</span>
-            <span className="rounded-full bg-red-50 text-red-700 border border-red-200/80 px-2 py-0.5 text-[10px] font-bold">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Action Today</span>
+            <span className="rounded-full bg-red-50 text-red-700 border border-red-200/80 px-2 py-0.2 text-[9px] font-bold">
               Priority
             </span>
           </div>
 
-          <div className="mt-1.5">
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-extrabold tracking-tight text-navy-950">{k?.hot_open ?? 0}</span>
-              <span className="text-xs font-semibold text-amber-700">Hot Leads Open</span>
-            </div>
-            <p className="text-[11px] text-slate-500 mt-0.5">High conversion score, ready for call</p>
+          <div className="my-1 flex items-baseline gap-2">
+            <span className="text-2xl font-extrabold tracking-tight text-navy-950">{k?.hot_open ?? 0}</span>
+            <span className="text-[11px] font-semibold text-amber-700">Hot Leads Open</span>
           </div>
 
-          <div className="mt-2 pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
-            <span className="text-slate-600">Open Handoffs:</span>
+          <div className="border-t border-slate-100 pt-1.5 flex items-center justify-between text-[11px]">
+            <span className="text-slate-500">Open Handoffs:</span>
             <span className="font-bold text-red-600">{k?.open_handoffs ?? 0}</span>
           </div>
         </div>
 
         {/* Card 3: Conversion & Qualification */}
-        <div className="card p-4 flex flex-col justify-between">
+        <div className="card p-3 flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Qualified Rate</span>
-            <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-600">Services</span>
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Qualified Rate</span>
+            <span className="rounded-full bg-slate-100 px-2 py-0.2 text-[9px] font-semibold text-slate-600">Services</span>
           </div>
 
-          <div className="mt-1.5 flex items-center justify-between">
-            <div>
-              <span className="text-3xl font-extrabold tracking-tight text-navy-950">
+          <div className="my-1 flex items-center justify-between">
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-2xl font-extrabold tracking-tight text-navy-950">
                 {k?.qualified_rate != null ? `${k.qualified_rate}%` : "—"}
               </span>
-              <p className="text-[11px] text-slate-500 mt-0.5">Leads to Qualified (30d)</p>
+              <span className="text-[11px] text-slate-400">30d Rate</span>
             </div>
-
-            <div className="relative flex h-11 w-11 items-center justify-center rounded-full bg-navy-50 border-3 border-navy text-[11px] font-extrabold text-navy shadow-inner">
+            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-navy-50 border-2 border-navy text-[10px] font-extrabold text-navy">
               {qualRate}%
             </div>
           </div>
 
-          <div className="mt-2 pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
+          <div className="border-t border-slate-100 pt-1.5 flex items-center justify-between text-[11px]">
             <span className="text-slate-500">Academy Inquiries:</span>
             <span className="font-bold text-navy-950">{k?.academy_inquiries_30d ?? 0}</span>
           </div>
         </div>
 
-        {/* Card 4: AI Auto-Pilot & First Touch Speed */}
-        <div className="card p-4 flex flex-col justify-between">
+        {/* Card 4: AI Auto-Pilot */}
+        <div className="card p-3 flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">AI Auto-Pilot</span>
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/80 px-2.5 py-0.5 text-[10px] font-bold">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">AI Auto-Pilot</span>
+            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/80 px-2 py-0.2 text-[9px] font-bold">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
               Active
             </span>
           </div>
 
-          <div className="mt-1.5">
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-extrabold tracking-tight text-navy-950">
-                {k?.emails_auto_replied_7d ?? 0}
-              </span>
-              <span className="text-xs font-semibold text-emerald-600">Auto-Replies (7d)</span>
-            </div>
-            <p className="text-[11px] text-slate-500 mt-0.5">
-              Speed: {k?.median_reply_min != null ? `${k.median_reply_min}m` : "< 1m instant"} · Total: {k?.emails_auto_replied_total ?? 0}
-            </p>
+          <div className="my-1 flex items-baseline gap-2">
+            <span className="text-2xl font-extrabold tracking-tight text-navy-950">
+              {k?.emails_auto_replied_7d ?? 0}
+            </span>
+            <span className="text-[11px] font-semibold text-emerald-600">Auto-Replies (7d)</span>
           </div>
 
-          <div className="mt-2 pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
-            <Link href="/inbox?f=auto" className="font-bold text-navy hover:text-gold-dark hover:underline flex items-center gap-1">
-              <span>View AI Replies &rarr;</span>
+          <div className="border-t border-slate-100 pt-1.5 flex items-center justify-between text-[11px]">
+            <Link href="/inbox?f=auto" className="font-bold text-navy hover:text-gold-dark hover:underline">
+              View AI Replies &rarr;
             </Link>
-            <span className="text-[11px] text-slate-400">
-              {k?.emails_waiting ?? 0} need human
-            </span>
+            <span className="text-slate-400">{k?.emails_waiting ?? 0} waiting</span>
           </div>
         </div>
       </div>
 
-      {/* Main Operational Section: Balanced 2-Column Grid (Zero Unnecessary Page Scroll) */}
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-12 items-start">
-        {/* Left Column (7 cols): Hot Leads Table + Side-by-side Channels & Pipelines */}
-        <div className="lg:col-span-7 space-y-4">
-          {/* Hot Leads / Follow-ups Tabs */}
+      {/* Main Operational Row: Single Horizontal Band (Zero Page Scroll) */}
+      <div className="grid grid-cols-1 gap-3 lg:grid-cols-12 items-stretch">
+        {/* Left Half (6 cols ~ 50%): Hot Leads & Follow-ups Table */}
+        <div className="lg:col-span-6 flex flex-col">
           <DashboardLeadTabs hotLeads={hot} followUps={followUps} />
+        </div>
 
-          {/* Side-by-side Row: Channels + Pipelines */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {/* Leads by Channel Card */}
-            <div className="card p-4 shadow-xs">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-2.5 mb-2.5">
-                <h2 className="text-xs font-bold uppercase tracking-wider text-navy-950">Leads by Channel (7d)</h2>
-                <span className="text-[11px] font-semibold text-slate-400">Total: {k?.new_7d ?? 0}</span>
+        {/* Right Half (6 cols ~ 50%): 2 balanced side-by-side sub-columns */}
+        <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-3 items-stretch">
+          {/* Sub-col 1: Live Recent AI Auto-Replies Widget */}
+          <div className="card p-3 shadow-xs flex flex-col justify-between h-full min-h-[330px]">
+            <div>
+              <div className="flex items-center justify-between border-b border-slate-100 pb-2 mb-2">
+                <div className="flex items-center gap-1.5">
+                  <span className="relative flex h-2 w-2">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                    <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+                  </span>
+                  <h2 className="text-xs font-bold uppercase tracking-wider text-navy-950">Auto-Replies (Live)</h2>
+                </div>
+                <Link href="/inbox?f=auto" className="text-[10px] font-semibold text-navy hover:text-gold-dark transition">
+                  All ({k?.emails_auto_replied_total ?? 0}) &rarr;
+                </Link>
               </div>
 
-              <div className="space-y-2.5">
+              {/* Compact scrollable list */}
+              <div className="space-y-1.5 max-h-[265px] overflow-y-auto pr-1">
+                {recentAutoReplies.map((r) => {
+                  const agentLabel = r.sent_by ? r.sent_by.replace(/^ai:/, "").replace(/_/g, " ") : "AI Agent";
+                  return (
+                    <Link
+                      key={r.id}
+                      href={`/inbox?f=auto&open=${r.id}`}
+                      className="block rounded-lg bg-slate-50/80 p-2 transition hover:bg-emerald-50/60 hover:border-emerald-200 border border-slate-200/60"
+                    >
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="font-semibold text-navy-950 truncate max-w-[140px]">
+                          {r.lead_name || r.to_addr || r.from_addr}
+                        </span>
+                        <span className="text-[10px] text-slate-400 shrink-0">{ago(r.created_at)}</span>
+                      </div>
+                      <p className="truncate text-[11px] text-slate-600 font-medium mt-0.5">
+                        {r.subject || "(No subject)"}
+                      </p>
+                      <div className="mt-1 flex items-center justify-between text-[10px]">
+                        <span className="font-bold text-emerald-800 bg-emerald-100/80 px-1.5 py-0.2 rounded uppercase tracking-wide">
+                          ✓ {agentLabel}
+                        </span>
+                        <span className="text-slate-400">Delivered</span>
+                      </div>
+                    </Link>
+                  );
+                })}
+
+                {recentAutoReplies.length === 0 && (
+                  <div className="py-8 text-center text-xs text-slate-400">
+                    No auto-replies logged yet.
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Sub-col 2: Pipelines Overview + Leads by Channel (Stacked neatly in this 330px column!) */}
+          <div className="flex flex-col justify-between gap-2.5 h-full min-h-[330px]">
+            {/* Pipelines Card */}
+            <div className="card p-3 shadow-xs flex-1 flex flex-col justify-between">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-1.5 mb-1.5">
+                <h2 className="text-xs font-bold uppercase tracking-wider text-navy-950">Pipelines Overview</h2>
+                <span className="text-[10px] font-semibold text-slate-400">Active Deals</span>
+              </div>
+
+              <div className="space-y-1.5 flex-1 flex flex-col justify-center">
+                <Link
+                  href="/pipelines/services"
+                  className="flex items-center justify-between rounded-lg bg-slate-50 p-2 transition hover:bg-navy-50 hover:border-navy-border/30 border border-slate-200/60 group"
+                >
+                  <div>
+                    <p className="text-xs font-bold text-navy-950 group-hover:text-navy">Services Pipeline (B2B)</p>
+                    <p className="text-[10px] text-slate-500">Won this month: {k?.won_30d ?? 0}</p>
+                  </div>
+                  <span className="text-xs font-bold text-navy group-hover:translate-x-0.5 transition-transform">&rarr;</span>
+                </Link>
+
+                <Link
+                  href="/pipelines/academy"
+                  className="flex items-center justify-between rounded-lg bg-slate-50 p-2 transition hover:bg-navy-50 hover:border-navy-border/30 border border-slate-200/60 group"
+                >
+                  <div>
+                    <p className="text-xs font-bold text-navy-950 group-hover:text-navy">Academy Pipeline (B2C)</p>
+                    <p className="text-[10px] text-slate-500">Enrolled this month: {k?.enrolled_30d ?? 0}</p>
+                  </div>
+                  <span className="text-xs font-bold text-navy group-hover:translate-x-0.5 transition-transform">&rarr;</span>
+                </Link>
+              </div>
+            </div>
+
+            {/* Leads by Channel Card */}
+            <div className="card p-3 shadow-xs flex-1 flex flex-col justify-between">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-1.5 mb-1.5">
+                <h2 className="text-xs font-bold uppercase tracking-wider text-navy-950">Leads by Channel (7d)</h2>
+                <span className="text-[10px] font-semibold text-slate-400">Total: {k?.new_7d ?? 0}</span>
+              </div>
+
+              <div className="space-y-1.5 flex-1 flex flex-col justify-center">
                 {bySource.map((r) => {
                   const pct = Math.round((r.leads / Math.max(1, k?.new_7d ?? 1)) * 100);
                   return (
                     <div key={r.source} className="group">
-                      <div className="flex justify-between text-xs font-medium">
+                      <div className="flex justify-between text-[11px] font-medium">
                         <span className="capitalize text-slate-700 font-semibold">{r.source}</span>
                         <span className="text-slate-500">
                           <strong className="text-navy-950">{r.leads}</strong> ({pct}%)
@@ -230,95 +298,8 @@ export default async function Dashboard() {
                     </div>
                   );
                 })}
-                {bySource.length === 0 && <p className="text-xs text-slate-400 py-2 text-center">No leads recorded yet.</p>}
+                {bySource.length === 0 && <p className="text-[11px] text-slate-400 text-center py-1">No leads recorded yet.</p>}
               </div>
-            </div>
-
-            {/* Quick Pipelines Overview Card */}
-            <div className="card p-4 shadow-xs">
-              <h2 className="text-xs font-bold uppercase tracking-wider text-navy-950 border-b border-slate-100 pb-2.5 mb-2.5">
-                Pipelines Overview
-              </h2>
-              <div className="space-y-2">
-                <Link
-                  href="/pipelines/services"
-                  className="flex items-center justify-between rounded-xl bg-slate-50 p-2.5 transition hover:bg-navy-50 hover:border-navy-border/30 border border-slate-200/60 group"
-                >
-                  <div>
-                    <p className="text-xs font-bold text-navy-950 group-hover:text-navy">Services Pipeline</p>
-                    <p className="text-[10px] text-slate-500">Won this month: {k?.won_30d ?? 0}</p>
-                  </div>
-                  <span className="text-xs font-bold text-navy group-hover:translate-x-0.5 transition-transform">&rarr;</span>
-                </Link>
-
-                <Link
-                  href="/pipelines/academy"
-                  className="flex items-center justify-between rounded-xl bg-slate-50 p-2.5 transition hover:bg-navy-50 hover:border-navy-border/30 border border-slate-200/60 group"
-                >
-                  <div>
-                    <p className="text-xs font-bold text-navy-950 group-hover:text-navy">Academy Pipeline</p>
-                    <p className="text-[10px] text-slate-500">Enrolled this month: {k?.enrolled_30d ?? 0}</p>
-                  </div>
-                  <span className="text-xs font-bold text-navy group-hover:translate-x-0.5 transition-transform">&rarr;</span>
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Right Column (5 cols): Live Recent AI Auto-Replies Widget */}
-        <div className="lg:col-span-5">
-          <div className="card p-4 shadow-xs flex flex-col">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-2.5 mb-2.5">
-              <div className="flex items-center gap-2">
-                <span className="relative flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
-                </span>
-                <h2 className="text-xs font-bold uppercase tracking-wider text-navy-950">Recent AI Auto-Replies</h2>
-              </div>
-              <Link href="/inbox?f=auto" className="text-[11px] font-semibold text-navy hover:text-gold-dark transition">
-                All ({k?.emails_auto_replied_total ?? 0}) &rarr;
-              </Link>
-            </div>
-
-            {/* Scrollable list inside the card if there are many replies */}
-            <div className="space-y-2 max-h-[380px] overflow-y-auto pr-1">
-              {recentAutoReplies.map((r) => {
-                const agentLabel = r.sent_by ? r.sent_by.replace(/^ai:/, "").replace(/_/g, " ") : "AI Agent";
-                return (
-                  <Link
-                    key={r.id}
-                    href={`/inbox?f=auto&open=${r.id}`}
-                    className="block rounded-xl bg-slate-50/80 p-2.5 transition hover:bg-emerald-50/60 hover:border-emerald-200 border border-slate-200/60"
-                  >
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="font-semibold text-navy-950 truncate max-w-[210px]">
-                        {r.lead_name || r.to_addr || r.from_addr}
-                      </span>
-                      <span className="text-[10px] text-slate-400 shrink-0">{ago(r.created_at)}</span>
-                    </div>
-                    <p className="truncate text-[11px] text-slate-600 font-medium mt-0.5">
-                      {r.subject || "(No subject)"}
-                    </p>
-                    <div className="mt-1.5 flex items-center justify-between">
-                      <span className="inline-flex items-center gap-1 rounded bg-emerald-100/80 px-1.5 py-0.5 text-[10px] font-bold text-emerald-800 uppercase tracking-wide">
-                        ✓ {agentLabel}
-                      </span>
-                      <span className="text-[10px] font-medium text-slate-400">Delivered via Gmail</span>
-                    </div>
-                  </Link>
-                );
-              })}
-
-              {recentAutoReplies.length === 0 && (
-                <div className="py-8 text-center">
-                  <p className="text-xs text-slate-500 font-medium">No auto-replies logged yet.</p>
-                  <p className="text-[10px] text-slate-400 mt-1">
-                    Incoming emails will be auto-replied by n8n agents and show here live.
-                  </p>
-                </div>
-              )}
             </div>
           </div>
         </div>

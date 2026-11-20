@@ -17,9 +17,10 @@ export default function DashboardLeadTabs({
   const list = tab === "hot" ? hotLeads : followUps;
 
   return (
-    <div className="card p-5 shadow-xs">
-      {/* Header with Tabs */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-3.5 mb-3.5">
+    <div className="card p-3.5 sm:p-4 shadow-xs flex flex-col justify-between h-full min-h-[350px]">
+      <div>
+        {/* Header with Tabs */}
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-2.5 mb-2.5">
         <div className="flex items-center gap-2">
           <button
             onClick={() => setTab("hot")}
@@ -150,5 +151,6 @@ export default function DashboardLeadTabs({
         )}
       </div>
     </div>
-  );
+  </div>
+);
 }

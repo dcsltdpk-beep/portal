@@ -28,7 +28,7 @@ export default function TopNav({ name, role, inboxCount, handoffsCount }: Props)
   const { title, sub } = getPageTitle();
 
   return (
-    <header className="sticky top-0 z-20 flex h-18 w-full items-center justify-between border-b border-slate-200/80 bg-white/85 px-6 backdrop-blur-md">
+    <header className="sticky top-0 z-20 flex h-14 w-full items-center justify-between border-b border-slate-200/80 bg-white/85 px-4 sm:px-6 backdrop-blur-md">
       {/* Page Title & Breadcrumb */}
       <div>
         <h1 className="text-xl font-bold tracking-tight text-navy-950">{title}</h1>
