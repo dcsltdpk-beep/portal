@@ -79,10 +79,10 @@ export default async function Dashboard() {
 
   return (
     <div className="space-y-3">
-      {/* Top Hero KPI Row (Sleek Compact 95px Height) */}
+      {/* Top Hero KPI Row (Vibrant Color-Coded 95px Height) */}
       <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
-        {/* Card 1: Featured Brand Gradient Hero Card */}
-        <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-navy via-navy-900 to-navy-950 p-3 text-white shadow-2xs flex flex-col justify-between">
+        {/* Card 1: Brand Navy & Gold Theme */}
+        <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-navy via-navy-900 to-navy-950 p-3 text-white shadow-2xs border border-navy-800 flex flex-col justify-between">
           <div className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-gold/15 blur-2xl" />
 
           <div className="flex items-center justify-between">
@@ -104,71 +104,75 @@ export default async function Dashboard() {
           </div>
         </div>
 
-        {/* Card 2: Hot Leads Action Card */}
-        <div className="card p-3 relative overflow-hidden flex flex-col justify-between hover:border-gold/40 transition">
+        {/* Card 2: Hot Leads Action Card (Vibrant Amber Theme) */}
+        <div className="card p-3 relative overflow-hidden flex flex-col justify-between border-t-4 border-t-amber-500 border-amber-200/90 bg-gradient-to-br from-amber-500/15 via-amber-50/50 to-white shadow-2xs hover:shadow-xs transition">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Action Today</span>
-            <span className="rounded-full bg-red-50 text-red-700 border border-red-200/80 px-2 py-0.2 text-[9px] font-bold">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-amber-900">Action Today</span>
+            <span className="rounded-full bg-amber-100 text-amber-900 border border-amber-300 px-2 py-0.2 text-[9px] font-bold">
               Priority
             </span>
           </div>
 
           <div className="my-1 flex items-baseline gap-2">
-            <span className="text-2xl font-extrabold tracking-tight text-navy-950">{k?.hot_open ?? 0}</span>
-            <span className="text-[11px] font-semibold text-amber-700">Hot Leads Open</span>
+            <span className="text-2xl font-extrabold tracking-tight text-amber-950">{k?.hot_open ?? 0}</span>
+            <span className="text-[11px] font-bold text-amber-800">Hot Leads Open</span>
           </div>
 
-          <div className="border-t border-slate-100 pt-1.5 flex items-center justify-between text-[11px]">
-            <span className="text-slate-500">Open Handoffs:</span>
-            <span className="font-bold text-red-600">{k?.open_handoffs ?? 0}</span>
+          <div className="border-t border-amber-100/90 pt-1.5 flex items-center justify-between text-[11px]">
+            <span className="text-amber-800/80 font-medium">Open Handoffs:</span>
+            <span className="font-black text-rose-600 bg-rose-50 px-1.5 py-0.2 rounded border border-rose-200 text-[10px]">
+              {k?.open_handoffs ?? 0}
+            </span>
           </div>
         </div>
 
-        {/* Card 3: Conversion & Qualification */}
-        <div className="card p-3 flex flex-col justify-between">
+        {/* Card 3: Conversion & Qualification (Vibrant Cyan Theme) */}
+        <div className="card p-3 relative overflow-hidden flex flex-col justify-between border-t-4 border-t-cyan-500 border-cyan-200/90 bg-gradient-to-br from-cyan-500/15 via-cyan-50/50 to-white shadow-2xs hover:shadow-xs transition">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Qualified Rate</span>
-            <span className="rounded-full bg-slate-100 px-2 py-0.2 text-[9px] font-semibold text-slate-600">Services</span>
+            <span className="text-[11px] font-bold uppercase tracking-wider text-cyan-900">Qualified Rate</span>
+            <span className="rounded-full bg-cyan-100 text-cyan-900 border border-cyan-300 px-2 py-0.2 text-[9px] font-bold">
+              Services
+            </span>
           </div>
 
           <div className="my-1 flex items-center justify-between">
             <div className="flex items-baseline gap-1.5">
-              <span className="text-2xl font-extrabold tracking-tight text-navy-950">
+              <span className="text-2xl font-extrabold tracking-tight text-cyan-950">
                 {k?.qualified_rate != null ? `${k.qualified_rate}%` : "—"}
               </span>
-              <span className="text-[11px] text-slate-400">30d Rate</span>
+              <span className="text-[11px] font-bold text-cyan-700">30d Rate</span>
             </div>
             <AnimatedPercentageRing value={qualRate} size={34} strokeWidth={3} />
           </div>
 
-          <div className="border-t border-slate-100 pt-1.5 flex items-center justify-between text-[11px]">
-            <span className="text-slate-500">Academy Inquiries:</span>
-            <span className="font-bold text-navy-950">{k?.academy_inquiries_30d ?? 0}</span>
+          <div className="border-t border-cyan-100/90 pt-1.5 flex items-center justify-between text-[11px]">
+            <span className="text-cyan-800/80 font-medium">Academy Inquiries:</span>
+            <span className="font-bold text-cyan-950">{k?.academy_inquiries_30d ?? 0}</span>
           </div>
         </div>
 
-        {/* Card 4: AI Auto-Pilot */}
-        <div className="card p-3 flex flex-col justify-between">
+        {/* Card 4: AI Auto-Pilot (Vibrant Emerald Theme) */}
+        <div className="card p-3 relative overflow-hidden flex flex-col justify-between border-t-4 border-t-emerald-500 border-emerald-200/90 bg-gradient-to-br from-emerald-500/15 via-emerald-50/50 to-white shadow-2xs hover:shadow-xs transition">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">AI Auto-Pilot</span>
-            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/80 px-2 py-0.2 text-[9px] font-bold">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-900">AI Auto-Pilot</span>
+            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 px-2 py-0.2 text-[9px] font-bold">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
               Active
             </span>
           </div>
 
           <div className="my-1 flex items-baseline gap-2">
-            <span className="text-2xl font-extrabold tracking-tight text-navy-950">
+            <span className="text-2xl font-extrabold tracking-tight text-emerald-950">
               {k?.emails_auto_replied_7d ?? 0}
             </span>
-            <span className="text-[11px] font-semibold text-emerald-600">Auto-Replies (7d)</span>
+            <span className="text-[11px] font-bold text-emerald-700">Auto-Replies (7d)</span>
           </div>
 
-          <div className="border-t border-slate-100 pt-1.5 flex items-center justify-between text-[11px]">
-            <Link href="/inbox?f=auto" className="font-bold text-navy hover:text-gold-dark hover:underline">
+          <div className="border-t border-emerald-100/90 pt-1.5 flex items-center justify-between text-[11px]">
+            <Link href="/inbox?f=auto" className="font-bold text-emerald-800 hover:text-emerald-950 hover:underline">
               View AI Replies &rarr;
             </Link>
-            <span className="text-slate-400">{k?.emails_waiting ?? 0} waiting</span>
+            <span className="text-emerald-700/80 font-medium text-[10px]">{k?.emails_waiting ?? 0} waiting</span>
           </div>
         </div>
       </div>
@@ -182,8 +186,8 @@ export default async function Dashboard() {
 
         {/* Right Half (6 cols ~ 50%): 2 balanced side-by-side sub-columns */}
         <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-3 items-stretch">
-          {/* Sub-col 1: Live Recent AI Auto-Replies Widget */}
-          <div className="card p-3 shadow-xs flex flex-col justify-between h-full min-h-[330px]">
+          {/* Sub-col 1: Live Recent AI Auto-Replies Widget (Emerald Accent Theme) */}
+          <div className="card p-3 shadow-xs flex flex-col justify-between h-full min-h-[330px] border-t-4 border-t-emerald-500 border-slate-200/90 bg-gradient-to-b from-emerald-50/30 via-white to-white">
             <div>
               <div className="flex items-center justify-between border-b border-slate-100 pb-2 mb-2">
                 <div className="flex items-center gap-1.5">
@@ -206,7 +210,7 @@ export default async function Dashboard() {
                     <Link
                       key={r.id}
                       href={`/inbox?f=auto&open=${r.id}`}
-                      className="block rounded-lg bg-slate-50/80 p-2 transition hover:bg-emerald-50/60 hover:border-emerald-200 border border-slate-200/60"
+                      className="block rounded-lg bg-white p-2 transition hover:bg-emerald-50/60 hover:border-emerald-300 border border-slate-200/70 shadow-2xs"
                     >
                       <div className="flex items-center justify-between text-xs">
                         <span className="font-semibold text-navy-950 truncate max-w-[140px]">
@@ -238,8 +242,8 @@ export default async function Dashboard() {
 
           {/* Sub-col 2: Pipelines Overview + Leads by Channel (Stacked neatly in this 330px column!) */}
           <div className="flex flex-col justify-between gap-2.5 h-full min-h-[330px]">
-            {/* Pipelines Card */}
-            <div className="card p-3 shadow-xs flex-1 flex flex-col justify-between">
+            {/* Pipelines Card (Indigo Accent Theme) */}
+            <div className="card p-3 shadow-xs flex-1 flex flex-col justify-between border-t-4 border-t-indigo-500 border-slate-200/90 bg-gradient-to-b from-indigo-50/30 via-white to-white">
               <div className="flex items-center justify-between border-b border-slate-100 pb-1.5 mb-1.5">
                 <h2 className="text-xs font-bold uppercase tracking-wider text-navy-950">Pipelines Overview</h2>
                 <span className="text-[10px] font-semibold text-slate-400">Active Deals</span>
@@ -248,10 +252,10 @@ export default async function Dashboard() {
               <div className="space-y-1.5 flex-1 flex flex-col justify-center">
                 <Link
                   href="/pipelines/services"
-                  className="flex items-center justify-between rounded-lg bg-slate-50 p-2 transition hover:bg-navy-50 hover:border-navy-border/30 border border-slate-200/60 group"
+                  className="flex items-center justify-between rounded-lg bg-white p-2 transition hover:bg-indigo-50/70 hover:border-indigo-300 border border-slate-200/70 shadow-2xs group"
                 >
                   <div>
-                    <p className="text-xs font-bold text-navy-950 group-hover:text-navy">Services Pipeline (B2B)</p>
+                    <p className="text-xs font-bold text-navy-950 group-hover:text-indigo-900">Services Pipeline (B2B)</p>
                     <p className="text-[10px] text-slate-500">Won this month: {k?.won_30d ?? 0}</p>
                   </div>
                   <span className="text-xs font-bold text-navy group-hover:translate-x-0.5 transition-transform">&rarr;</span>
@@ -259,10 +263,10 @@ export default async function Dashboard() {
 
                 <Link
                   href="/pipelines/academy"
-                  className="flex items-center justify-between rounded-lg bg-slate-50 p-2 transition hover:bg-navy-50 hover:border-navy-border/30 border border-slate-200/60 group"
+                  className="flex items-center justify-between rounded-lg bg-white p-2 transition hover:bg-indigo-50/70 hover:border-indigo-300 border border-slate-200/70 shadow-2xs group"
                 >
                   <div>
-                    <p className="text-xs font-bold text-navy-950 group-hover:text-navy">Academy Pipeline (B2C)</p>
+                    <p className="text-xs font-bold text-navy-950 group-hover:text-indigo-900">Academy Pipeline (B2C)</p>
                     <p className="text-[10px] text-slate-500">Enrolled this month: {k?.enrolled_30d ?? 0}</p>
                   </div>
                   <span className="text-xs font-bold text-navy group-hover:translate-x-0.5 transition-transform">&rarr;</span>
@@ -270,8 +274,8 @@ export default async function Dashboard() {
               </div>
             </div>
 
-            {/* Leads by Channel Card */}
-            <div className="card p-3 shadow-xs flex-1 flex flex-col justify-between">
+            {/* Leads by Channel Card (Purple Accent Theme) */}
+            <div className="card p-3 shadow-xs flex-1 flex flex-col justify-between border-t-4 border-t-purple-500 border-slate-200/90 bg-gradient-to-b from-purple-50/30 via-white to-white">
               <div className="flex items-center justify-between border-b border-slate-100 pb-1.5 mb-1.5">
                 <h2 className="text-xs font-bold uppercase tracking-wider text-navy-950">Leads by Channel (7d)</h2>
                 <span className="text-[10px] font-semibold text-slate-400">Total: {k?.new_7d ?? 0}</span>
@@ -290,7 +294,7 @@ export default async function Dashboard() {
                       </div>
                       <div className="mt-1 h-1.5 w-full rounded-full bg-slate-100 overflow-hidden">
                         <div
-                          className="h-1.5 rounded-full bg-gradient-to-r from-navy to-navy-surface transition-all duration-500 group-hover:from-gold group-hover:to-gold-dark"
+                          className="h-1.5 rounded-full bg-gradient-to-r from-purple-600 via-indigo-600 to-navy transition-all duration-500 group-hover:from-gold group-hover:to-gold-dark"
                           style={{ width: `${Math.min(100, Math.max(6, (r.leads / maxSrc) * 100))}%` }}
                         />
                       </div>
