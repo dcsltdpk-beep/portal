@@ -16,7 +16,7 @@ const NAV: NavItem[] = [
     href: "/dashboard",
     label: "Dashboard",
     icon: (active) => (
-      <svg className={`h-5 w-5 transition-transform duration-300 group-hover:scale-110 ${active ? "text-white" : "text-slate-400 group-hover:text-white"}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}>
+      <svg className={`h-5 w-5 transition-transform duration-300 group-hover:scale-110 ${active ? "text-gold" : "text-slate-400 group-hover:text-white"}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}>
         <circle cx="12" cy="12" r="9" />
         <path strokeLinecap="round" strokeLinejoin="round" d="M12 7v5l3 3" />
         <circle cx="12" cy="12" r="1.5" fill="currentColor" />
@@ -27,7 +27,7 @@ const NAV: NavItem[] = [
     href: "/leads",
     label: "Leads",
     icon: (active) => (
-      <svg className={`h-5 w-5 transition-transform duration-300 group-hover:scale-110 ${active ? "text-white" : "text-slate-400 group-hover:text-white"}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}>
+      <svg className={`h-5 w-5 transition-transform duration-300 group-hover:scale-110 ${active ? "text-gold" : "text-slate-400 group-hover:text-white"}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}>
         <circle cx="12" cy="12" r="9" />
         <circle cx="12" cy="10" r="3" />
         <path strokeLinecap="round" d="M6.5 18a5.5 5.5 0 0111 0" />
@@ -38,7 +38,7 @@ const NAV: NavItem[] = [
     href: "/pipelines/services",
     label: "Services Pipeline",
     icon: (active) => (
-      <svg className={`h-5 w-5 transition-transform duration-300 group-hover:scale-110 ${active ? "text-white" : "text-slate-400 group-hover:text-white"}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}>
+      <svg className={`h-5 w-5 transition-transform duration-300 group-hover:scale-110 ${active ? "text-gold" : "text-slate-400 group-hover:text-white"}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
         <path strokeLinecap="round" strokeLinejoin="round" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
       </svg>
@@ -48,7 +48,7 @@ const NAV: NavItem[] = [
     href: "/pipelines/academy",
     label: "Academy Pipeline",
     icon: (active) => (
-      <svg className={`h-5 w-5 transition-transform duration-300 group-hover:scale-110 ${active ? "text-white" : "text-slate-400 group-hover:text-white"}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}>
+      <svg className={`h-5 w-5 transition-transform duration-300 group-hover:scale-110 ${active ? "text-gold" : "text-slate-400 group-hover:text-white"}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}>
         <rect x="3" y="4" width="18" height="17" rx="3" />
         <path strokeLinecap="round" d="M16 2v4M8 2v4M3 9.5h18" />
         <circle cx="8" cy="13.5" r="1" fill="currentColor" />
@@ -64,7 +64,7 @@ const NAV: NavItem[] = [
     label: "Inbox",
     badgeKey: "inbox",
     icon: (active) => (
-      <svg className={`h-5 w-5 transition-transform duration-300 group-hover:scale-110 ${active ? "text-white" : "text-slate-400 group-hover:text-white"}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}>
+      <svg className={`h-5 w-5 transition-transform duration-300 group-hover:scale-110 ${active ? "text-gold" : "text-slate-400 group-hover:text-white"}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
       </svg>
     ),
@@ -74,7 +74,7 @@ const NAV: NavItem[] = [
     label: "Handoffs",
     badgeKey: "handoffs",
     icon: (active) => (
-      <svg className={`h-5 w-5 transition-transform duration-300 group-hover:scale-110 ${active ? "text-white" : "text-slate-400 group-hover:text-white"}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}>
+      <svg className={`h-5 w-5 transition-transform duration-300 group-hover:scale-110 ${active ? "text-gold" : "text-slate-400 group-hover:text-white"}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}>
         <circle cx="12" cy="12" r="9" />
         <path strokeLinecap="round" d="M3.6 9h16.8M3.6 15h16.8" />
         <path strokeLinecap="round" d="M12 3a15 15 0 010 18M12 3a15 15 0 000 18" />
@@ -85,7 +85,7 @@ const NAV: NavItem[] = [
     href: "/settings",
     label: "Settings",
     icon: (active) => (
-      <svg className={`h-5 w-5 transition-transform duration-300 group-hover:scale-110 ${active ? "text-white" : "text-slate-400 group-hover:text-white"}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}>
+      <svg className={`h-5 w-5 transition-transform duration-300 group-hover:scale-110 ${active ? "text-gold" : "text-slate-400 group-hover:text-white"}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}>
         <circle cx="12" cy="12" r="3" />
         <path strokeLinecap="round" strokeLinejoin="round" d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z" />
       </svg>
@@ -175,9 +175,9 @@ export default function Sidebar({
               width: "78px",
             }}
           >
-            <div className="relative h-full w-full rounded-full bg-[#6E6C68]/45 backdrop-blur-xl border border-white/20 shadow-[0_4px_20px_rgba(0,0,0,0.4)] flex items-center justify-end pr-2.5">
-              {/* Solid White Glowing Dot on the right edge */}
-              <span className="h-2.5 w-2.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,1)]" />
+            <div className="relative h-full w-full rounded-full bg-gradient-to-r from-gold/30 via-gold/20 to-gold/30 backdrop-blur-xl border border-gold/50 shadow-[0_4px_24px_rgba(251,174,68,0.35)] flex items-center justify-end pr-2.5">
+              {/* Solid Yellow / Gold Glowing Dot on the right edge */}
+              <span className="h-2.5 w-2.5 rounded-full bg-gold shadow-[0_0_12px_rgba(251,174,68,1)] animate-pulse" />
             </div>
           </div>
 
@@ -203,7 +203,7 @@ export default function Sidebar({
                       setOptimisticIndex(idx);
                     }}
                     className={`relative flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300 ${
-                      active ? "text-white" : "text-slate-400 hover:text-white"
+                      active ? "text-gold font-bold drop-shadow-[0_2px_8px_rgba(251,174,68,0.6)]" : "text-slate-400 hover:text-white"
                     }`}
                   >
                     {n.icon(active)}
