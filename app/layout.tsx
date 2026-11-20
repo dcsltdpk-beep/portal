@@ -13,8 +13,11 @@ export const metadata: Metadata = {
   title: "DREAM CYBER SECURITY | CRM Portal",
   description: "Dream Cyber Security (Private) Limited - 360 CRM & Lead Management Portal",
   icons: {
-    icon: "/logo.png",
-    shortcut: "/logo.png",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/logo.png", type: "image/png" },
+    ],
+    shortcut: "/favicon.ico",
     apple: "/logo.png",
   },
 };
