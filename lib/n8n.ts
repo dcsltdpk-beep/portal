@@ -2,9 +2,9 @@ import "server-only";
 
 /** Calls a DCS Portal API webhook in n8n (Header Auth: X-DCS-Key). */
 export async function n8n<T = unknown>(path: "dcs/send-email" | "dcs/update-lead" | "dcs/lead-form", body: Record<string, unknown>): Promise<T> {
-  const base = process.env.N8N_BASE_URL;
+  const base = process.env.N8N_BASE_URL || process.env.N8N_BASE_UR;
   if (!base || base.includes("yourdomain.com")) {
-    throw new Error("n8n Webhook URL configure nahi hai (Vercel Environment Variables me N8N_BASE_URL placeholder hai). Please apna actual n8n URL set karein.");
+    throw new Error("n8n Webhook URL configure nahi hai (Vercel Environment Variables me N8N_BASE_URL placeholder hai ya missing hai). Please check Vercel Settings.");
   }
 
   let res: Response;
@@ -21,7 +21,7 @@ export async function n8n<T = unknown>(path: "dcs/send-email" | "dcs/update-lead
 
   const text = await res.text();
   let data: unknown = text;
-  try { data = JSON.parse(text); } catch {}
+  try { data = JSON.parse(text); } catch { }
   if (!res.ok) throw new Error(`n8n ${path} failed (${res.status}): ${text.slice(0, 200)}`);
   return data as T;
 }
