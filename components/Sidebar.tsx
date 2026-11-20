@@ -206,50 +206,8 @@ export default function Sidebar({
         </nav>
       </div>
 
-      {/* Bottom Area: 3D Gradient Twisted Ribbon + Avatar + Logout */}
-      <div className="pb-4 pt-2 flex flex-col items-center gap-3">
-        {/* Floating 3D Twisted Ribbon / Torus Spiral (As seen in the reference screenshot!) */}
-        <div className="relative group cursor-pointer" title="Dream Cyber AI Engine">
-          <div className="relative w-12 h-12 flex items-center justify-center animate-float">
-            <svg viewBox="0 0 100 100" className="w-11 h-11 drop-shadow-[0_8px_16px_rgba(251,174,68,0.35)]">
-              <defs>
-                <linearGradient id="ribbonGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#FCCD7B" />
-                  <stop offset="40%" stopColor="#FBAE44" />
-                  <stop offset="80%" stopColor="#FF5E7E" />
-                  <stop offset="100%" stopColor="#9C27B0" />
-                </linearGradient>
-                <linearGradient id="ribbonGrad2" x1="100%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stopColor="#FF5E7E" />
-                  <stop offset="50%" stopColor="#8A2BE2" />
-                  <stop offset="100%" stopColor="#4A148C" />
-                </linearGradient>
-                <filter id="glow3d" x="-20%" y="-20%" width="140%" height="140%">
-                  <feDropShadow dx="0" dy="4" stdDeviation="3" floodColor="#FBAE44" floodOpacity="0.4" />
-                </filter>
-              </defs>
-              {/* Back twisted loop */}
-              <path
-                d="M32,58 C22,68 28,82 45,82 C65,82 78,64 74,48 C70,32 50,32 38,44"
-                fill="none"
-                stroke="url(#ribbonGrad2)"
-                strokeWidth="15"
-                strokeLinecap="round"
-              />
-              {/* Front glowing twisted loop */}
-              <path
-                d="M26,38 C20,24 38,15 54,18 C72,22 80,40 68,56 C56,72 32,68 24,54"
-                fill="none"
-                stroke="url(#ribbonGrad1)"
-                strokeWidth="15"
-                strokeLinecap="round"
-                filter="url(#glow3d)"
-              />
-              {/* Core highlight dot */}
-              <circle cx="50" cy="20" r="3.5" fill="#FFF" opacity="0.8" />
-            </svg>
-          </div>
-        </div>
+      {/* Bottom Area: Avatar + Logout */}
+      <div className="pb-5 pt-2 flex flex-col items-center gap-3">
 
         {/* User Profile Avatar with Red Unread Badge */}
         <div className="relative group cursor-pointer" title={`${name} (${role})`}>
