@@ -21,24 +21,38 @@ export default async function LeadsPage({
   const page = Math.max(1, Number(sp.page) || 1);
   const offset = (page - 1) * PAGE;
 
-  const scope = leadScope(s, "l", 7);
-  const conds = [scope.sql];
-  const params: unknown[] = [
-    sp.q ? `%${sp.q.trim().toLowerCase()}%` : null,
-    sp.pipeline || null,
-    sp.stage || null,
-    sp.temp || null,
-    sp.source || null,
-    sp.owner || null,
-    ...scope.params,
-  ];
+  const conds: string[] = [];
+  const params: unknown[] = [];
 
-  if (sp.q) conds.push("(lower(l.name) like $1 or lower(l.email) like $1 or l.phone like $1 or lower(l.company) like $1)");
-  if (sp.pipeline) conds.push("l.pipeline = $2");
-  if (sp.stage) conds.push("l.stage = $3");
-  if (sp.temp) conds.push("l.temperature = $4");
-  if (sp.source) conds.push("l.source = $5");
-  if (sp.owner) conds.push("l.owner_id = $6::uuid");
+  const add = (clause: (idx: number) => string, val: unknown) => {
+    params.push(val);
+    conds.push(clause(params.length));
+  };
+
+  if (sp.q) {
+    add((i) => `(lower(l.name) like $${i} or lower(l.email) like $${i} or l.phone like $${i} or lower(l.company) like $${i})`, `%${sp.q.trim().toLowerCase()}%`);
+  }
+  if (sp.pipeline) {
+    add((i) => `l.pipeline = $${i}`, sp.pipeline);
+  }
+  if (sp.stage) {
+    add((i) => `l.stage = $${i}`, sp.stage);
+  }
+  if (sp.temp) {
+    add((i) => `l.temperature = $${i}`, sp.temp);
+  }
+  if (sp.source) {
+    add((i) => `l.source = $${i}`, sp.source);
+  }
+  if (sp.owner) {
+    add((i) => `l.owner_id = $${i}::uuid`, sp.owner);
+  }
+
+  const scope = leadScope(s, "l", params.length + 1);
+  conds.push(scope.sql);
+  params.push(...scope.params);
+
+  const whereSql = conds.join(" and ");
 
   const order = sp.sort === "new" ? "l.created_at desc"
     : sp.sort === "activity" ? "l.last_inbound_at desc nulls last"
@@ -48,7 +62,7 @@ export default async function LeadsPage({
     q<Lead>(`
       select l.*, u.name as owner_name from crm.leads l
       left join crm.users u on u.id = l.owner_id
-      where ${conds.join(" and ")}
+      where ${whereSql}
       order by ${order} limit ${PAGE} offset ${offset}
     `, params),
     q<User>("select id, name, role, email from crm.users where active order by name"),
