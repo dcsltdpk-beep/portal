@@ -2,6 +2,7 @@ import Link from "next/link";
 import { requireSession, leadScope } from "@/lib/auth";
 import { q, q1 } from "@/lib/db";
 import DashboardLeadTabs from "@/components/DashboardLeadTabs";
+import AnimatedPercentageRing from "@/components/AnimatedPercentageRing";
 import { ago } from "@/lib/format";
 import type { Lead } from "@/lib/types";
 
@@ -137,9 +138,7 @@ export default async function Dashboard() {
               </span>
               <span className="text-[11px] text-slate-400">30d Rate</span>
             </div>
-            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-navy-50 border-2 border-navy text-[10px] font-extrabold text-navy">
-              {qualRate}%
-            </div>
+            <AnimatedPercentageRing value={qualRate} size={34} strokeWidth={3} />
           </div>
 
           <div className="border-t border-slate-100 pt-1.5 flex items-center justify-between text-[11px]">
