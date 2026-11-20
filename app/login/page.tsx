@@ -17,6 +17,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
             height={64}
             className="mb-3 h-16 w-16 object-contain drop-shadow"
             priority
+            unoptimized
           />
           <p className="text-[11px] font-bold tracking-widest text-navy uppercase">DREAM CYBER SECURITY</p>
           <h1 className="text-2xl font-bold tracking-tight text-navy-950">CRM Portal</h1>

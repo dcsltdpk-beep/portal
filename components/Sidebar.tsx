@@ -26,6 +26,7 @@ export default function Sidebar({ name, role, badges }: { name: string; role: st
           height={40}
           className="h-10 w-10 shrink-0 object-contain drop-shadow"
           priority
+          unoptimized
         />
         <div className="min-w-0 flex-1">
           <p className="text-[10px] font-bold tracking-widest text-gold uppercase truncate">DREAM CYBER SECURITY</p>
