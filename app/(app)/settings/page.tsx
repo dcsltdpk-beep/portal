@@ -17,16 +17,16 @@ export default async function SettingsPage() {
 
   return (
     <div className="space-y-4">
-      {/* Simple Page Header */}
+      {/* Page Header */}
       <div>
         <h1 className="text-xl font-bold text-navy-950">Settings</h1>
         <p className="text-xs text-slate-500 mt-0.5">
-          Manage lead qualification rules and team notifications.
+          Configure lead scoring rules and notification preferences.
         </p>
       </div>
 
-      {/* Main Grid */}
-      <div className="grid gap-4 lg:grid-cols-[1fr_320px] items-start">
+      {/* Main Grid: Left Settings Form + Right Team */}
+      <div className="grid gap-4 lg:grid-cols-[1fr_300px] items-start">
         {/* Left Column: Settings Form */}
         <div>
           <SettingsForm
@@ -37,9 +37,8 @@ export default async function SettingsPage() {
           />
         </div>
 
-        {/* Right Column: Clean Team & Status */}
-        <div className="space-y-4">
-          {/* Team Access */}
+        {/* Right Column: Team */}
+        <div>
           <div className="card p-4 bg-white space-y-3">
             <div className="flex items-center justify-between border-b border-slate-100 pb-2">
               <h2 className="text-xs font-bold text-navy-950">Team</h2>
@@ -60,28 +59,6 @@ export default async function SettingsPage() {
                   </span>
                 </div>
               ))}
-            </div>
-          </div>
-
-          {/* System Health */}
-          <div className="card p-4 bg-white space-y-2.5">
-            <h2 className="text-xs font-bold text-navy-950 border-b border-slate-100 pb-2">
-              System Status
-            </h2>
-
-            <div className="space-y-2 text-xs">
-              <div className="flex items-center justify-between">
-                <span className="text-slate-600">AI Agents</span>
-                <span className="font-semibold text-emerald-600">Active</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-slate-600">Gmail Sync</span>
-                <span className="font-semibold text-emerald-600">Connected</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-slate-600">Database</span>
-                <span className="font-semibold text-emerald-600">Connected</span>
-              </div>
             </div>
           </div>
         </div>
